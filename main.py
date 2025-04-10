@@ -1,7 +1,7 @@
 
 import pygame
 import player
-import coin
+# import coin
 
 
 
@@ -13,11 +13,11 @@ class Game:
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("coins")
         self.clock = pygame.time.Clock()
+        self.screen_height = self.window.get_height()
+        self.screen_width = self.window.get_width()
 
         self.player = player.Player(self, 32, 32)
-        self.coins = [coin.Coin(self, 150, 150),
-                      coin.Coin(self, 250, 150),
-                      coin.Coin(self, 350, 350)]
+
         self.run()
 
     def run(self):
@@ -34,10 +34,7 @@ class Game:
             self.window.fill((25, 25, 25))
             self.player.update()
 
-            for coin in self.coins:
-                coin.update()
-                if coin.is_destroyed:
-                    self.coins.remove(coin)
+
 
 
 

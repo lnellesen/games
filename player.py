@@ -8,6 +8,10 @@ class Player:
         self.game = game
         self.surface = game.window
         self.rect = pygame.Rect(self.x, self.y, 64, 64)
+        self.height = 64
+        self.width = 64
+        self.fall_velocity = 200 # fall velocity
+        self.on_ground = False # check if player is on the ground
 
 
     def update(self):
@@ -22,12 +26,20 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_RIGHT]:
-            self.x += speed * self.game.delta_time # movement in pixel per second
-        elif keys[pygame.K_LEFT]:
-            self.x -= speed * self.game.delta_time
+        if not self.on_ground:
+            if keys[pygame.K_RIGHT]:
+                self.x += speed * self.game.delta_time # movement in pixel per second
+                if self.x > self.game.screen_width - self.width: # right border for rectangle
+                    self.x = self.game.screen_width - self.width
+
+            elif keys[pygame.K_LEFT]:
+                self.x -= speed * self.game.delta_time
+                if self.x < 0: # left border for rectangle
+                    self.x = 0
 
         if keys[pygame.K_DOWN]:
-            self.y += speed * self.game.delta_time
-        elif keys[pygame.K_UP]:
-            self.y -= speed * self.game.delta_time
+            self.y += self.fall_velocity
+            if self.y > self.game.screen_height - self.height:
+                self.y = self.game.screen_height - self.height
+
+                self.on_ground = True
