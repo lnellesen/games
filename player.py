@@ -2,15 +2,15 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x, y, color='red', size=64):
-        self.x = x
-        self.y = y
+    def __init__(self, game, x=300, y=32, color='red', size=64):
+        self.x = x # vertical starting position
+        self.y = y # horizontal starting position
         self.game = game
         self.color = color
         self.surface = game.window
-        self.rect = pygame.Rect(self.x, self.y, 32, 32)
         self.height = size
         self.width = size
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
         self.falling = False
@@ -19,9 +19,9 @@ class Player:
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.movement(speed=100)
-        self.draw()
+        self.draw() # draws object during every update
     
-    def draw(self):
+    def draw(self): # shape of object
         pygame.draw.rect(self.surface, "black", (self.x - 1, self.y - 1, self.width + 2, self.height + 2))
         pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
@@ -49,7 +49,10 @@ class Player:
             for other in self.game.players:
                 if other is self:
                     continue
-                if self._is_falling_on_top_of(other):
+                if self._is_falling_on_top_of(other) and self.color == other.color:
+                    self.merge_with(other)
+                    return
+                elif self._is_falling_on_top_of(other):
                     self.y = other.y - self.height
                     self.on_ground = True
                     self.falling = False
@@ -73,3 +76,25 @@ class Player:
             self.y + self.height - self.fall_velocity * self.game.delta_time < other.y
         )
         return horizontally_aligned and vertically_touching
+    
+    def merge_with(self, other):
+
+        self.game.players.remove(self)
+        self.game.players.remove(other)
+
+        form_keys = list(self.game.player_forms.keys())
+        current_index = form_keys.index(self.color)
+
+        if current_index > 0:
+            new_color = form_keys[current_index - 1]
+            new_size = self.game.player_forms[new_color]
+        else:
+            new_color = self.color
+            new_size = self.height
+        
+        new_x = (self.x + other.x) // 2
+        new_y = other.y 
+
+        merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
+        merged.on_ground = True
+        self.game.players.append(merged)

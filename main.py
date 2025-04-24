@@ -16,11 +16,9 @@ class Game:
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
 
-        self.players = [player.Player(self, 300, 32)]
-        self.player_forms = {
-                            'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
-                            'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28
-                            }
+        self.players = [player.Player(self)] # list of all players in the game - it gets extended whenever a new player is added
+        self.player_forms = {'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
+                            'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28}
 
         self.run()
 
