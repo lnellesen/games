@@ -7,16 +7,17 @@ class Player:
         self.y = y
         self.game = game
         self.surface = game.window
-        self.rect = pygame.Rect(self.x, self.y, 64, 64)
+        self.rect = pygame.Rect(self.x, self.y, 32, 32)
         self.height = 64
         self.width = 64
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
+        self.falling = False
 
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, 64, 64)
-        self.movement(300)
+        self.movement(speed=100)
         self.draw()
     
     def draw(self):
@@ -26,7 +27,7 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
 
-        if not self.on_ground:
+        if not self.on_ground and not self.falling: # no horizontal movement while player is falling
             if keys[pygame.K_RIGHT]:
                 self.x += speed * self.game.delta_time # movement in pixel per second
                 if self.x > self.game.screen_width - self.width: # right border for rectangle
@@ -37,9 +38,11 @@ class Player:
                 if self.x < 0: # left border for rectangle
                     self.x = 0
 
-        if keys[pygame.K_DOWN]:
-            self.y += self.fall_velocity
-            if self.y > self.game.screen_height - self.height:
+        if keys[pygame.K_DOWN] and not self.on_ground and not self.falling:
+            self.falling = True
+        if not self.on_ground and self.falling:
+            self.y += self.fall_velocity * self.game.delta_time
+            if self.y >= self.game.screen_height - self.height:
                 self.y = self.game.screen_height - self.height
-
                 self.on_ground = True
+                self.falling = False

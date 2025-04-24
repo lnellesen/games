@@ -16,7 +16,7 @@ class Game:
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
 
-        self.player = player.Player(self, 32, 32)
+        self.players = [player.Player(self, 300, 32)]
 
         self.run()
 
@@ -32,17 +32,19 @@ class Game:
             
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((25, 25, 25))
-            self.player.update()
+            
+            for p in self.players:
+                p.update()
 
-
-
-
-
+            if self.players[-1].on_ground:
+                self.players.append(player.Player(self, 300, 32))
 
 
             pygame.display.update()
 
     pygame.quit()
 
+    def add_new_player(self):
+        self.player = player.Player(self, 300, 32)
 
 game = Game()
