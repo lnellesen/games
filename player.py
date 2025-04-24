@@ -2,26 +2,28 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, color='red', size=64):
         self.x = x
         self.y = y
         self.game = game
+        self.color = color
         self.surface = game.window
         self.rect = pygame.Rect(self.x, self.y, 32, 32)
-        self.height = 64
-        self.width = 64
+        self.height = size
+        self.width = size
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
         self.falling = False
 
 
     def update(self):
-        self.rect = pygame.Rect(self.x, self.y, 64, 64)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.movement(speed=100)
         self.draw()
     
     def draw(self):
-        pygame.draw.rect(self.surface, "red", (self.x, self.y, 64, 64))
+        pygame.draw.rect(self.surface, "black", (self.x - 1, self.y - 1, self.width + 2, self.height + 2))
+        pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
 
     def movement(self, speed):

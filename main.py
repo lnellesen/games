@@ -1,7 +1,7 @@
 
 import pygame
 import player
-# import coin
+import random
 
 
 
@@ -17,6 +17,10 @@ class Game:
         self.screen_width = self.window.get_width()
 
         self.players = [player.Player(self, 300, 32)]
+        self.player_forms = {
+                            'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
+                            'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28
+                            }
 
         self.run()
 
@@ -36,15 +40,17 @@ class Game:
             for p in self.players:
                 p.update()
 
-            if self.players[-1].on_ground:
-                self.players.append(player.Player(self, 300, 32))
+            if self.players[-1].on_ground: # if last player on the ground add a new player
+                self.add_new_player()
 
 
             pygame.display.update()
 
     pygame.quit()
 
-    def add_new_player(self):
-        self.player = player.Player(self, 300, 32)
+    # function to add new player with randomly selected color and size
+    def add_new_player(self): 
+        color, size = random.choice(list(self.player_forms.items()))
+        self.players.append(player.Player(self, 300, 32, color=color, size=size))
 
 game = Game()
