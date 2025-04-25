@@ -49,10 +49,16 @@ class Player:
             for other in self.game.players:
                 if other is self:
                     continue
-                if self._is_falling_on_top_of(other) and self.color == other.color:
-                    self.merge_with(other)
+                if self.is_falling_on_top_of(other) and self.color == other.color:
+                    form_keys = list(self.game.player_forms.keys())
+                    if form_keys.index(self.color) > 0:
+                        self.merge_with(other)
+                    else: # dont merge
+                        self.y = other.y - self.height
+                        self.on_ground = True
+                        self.falling = False
                     return
-                elif self._is_falling_on_top_of(other):
+                elif self.is_falling_on_top_of(other):
                     self.y = other.y - self.height
                     self.on_ground = True
                     self.falling = False
@@ -65,7 +71,7 @@ class Player:
                 self.falling = False
 
 
-    def _is_falling_on_top_of(self, other):
+    def is_falling_on_top_of(self, other):
         # Check if this player is falling onto another player
         horizontally_aligned = (
             self.x + self.width > other.x and
@@ -78,20 +84,12 @@ class Player:
         return horizontally_aligned and vertically_touching
     
     def merge_with(self, other):
-
+        
+        form_keys = list(self.game.player_forms.keys())
         self.game.players.remove(self)
         self.game.players.remove(other)
-
-        form_keys = list(self.game.player_forms.keys())
-        current_index = form_keys.index(self.color)
-
-        if current_index > 0:
-            new_color = form_keys[current_index - 1]
-            new_size = self.game.player_forms[new_color]
-        else:
-            new_color = self.color
-            new_size = self.height
-        
+        new_color = form_keys[form_keys.index(self.color) - 1]
+        new_size = self.game.player_forms[new_color]
         new_x = (self.x + other.x) // 2
         new_y = other.y 
 
