@@ -22,7 +22,6 @@ class Player:
         self.draw() # draws object during every update
     
     def draw(self): # shape of object
-        pygame.draw.rect(self.surface, "black", (self.x - 1, self.y - 1, self.width + 2, self.height + 2))
         pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
 
@@ -90,7 +89,7 @@ class Player:
         self.game.players.remove(other)
         new_color = form_keys[form_keys.index(self.color) - 1]
         new_size = self.game.player_forms[new_color]
-        new_x = (self.x + other.x) // 2
+        new_x = other.x
         new_y = other.y 
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
