@@ -28,15 +28,17 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
 
-        if not self.on_ground and not self.falling: # no horizontal movement while player is falling
+        if not self.on_ground and not self.falling:
             if keys[pygame.K_RIGHT]:
-                self.x += speed * self.game.delta_time # movement in pixel per second
-                if self.x > self.game.screen_width - self.width: # right border for rectangle
+                self.x += speed * self.game.delta_time
+                # right border for rectangle
+                if self.x > self.game.screen_width - self.width:
                     self.x = self.game.screen_width - self.width
 
             elif keys[pygame.K_LEFT]:
                 self.x -= speed * self.game.delta_time
-                if self.x < 0: # left border for rectangle
+                # left border for rectangle
+                if self.x < 0:
                     self.x = 0
 
         if keys[pygame.K_DOWN] and not self.on_ground and not self.falling:
@@ -50,9 +52,10 @@ class Player:
                     continue
                 if self.is_falling_on_top_of(other) and self.color == other.color:
                     form_keys = list(self.game.player_forms.keys())
+                    # merge with other player it not largest possible player
                     if form_keys.index(self.color) > 0:
                         self.merge_with(other)
-                    else: # dont merge
+                    else:
                         self.y = other.y - self.height
                         self.on_ground = True
                         self.falling = False
