@@ -92,8 +92,9 @@ class Player:
         self.game.players.remove(other)
         new_color = form_keys[form_keys.index(self.color) - 1]
         new_size = self.game.player_forms[new_color]
-        new_x = other.x
-        new_y = other.y 
+        # vertical position of new player on top of player below and horizontally centered around other player
+        new_x = other.x + (self.height - new_size)/2
+        new_y = other.y + (self.height - new_size)
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True
