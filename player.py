@@ -2,11 +2,12 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x=300, y=32, color='red', size=64):
+    def __init__(self, game, x=300, y=32, color='blueberry.png', size=64):
         self.x = x # vertical starting position
         self.y = y # horizontal starting position
         self.game = game
         self.color = color
+        self.image = pygame.image.load(self.color)
         self.surface = game.window
         self.height = size
         self.width = size
@@ -19,11 +20,11 @@ class Player:
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.movement(speed=100)
-        self.draw() # draws object during every update
+        self.surface.blit(self.image, self.rect)
+        #self.draw() # draws object during every update
     
-    def draw(self): # shape of object
-        pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
-
+    #def draw(self): # shape of object
+     #   pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
