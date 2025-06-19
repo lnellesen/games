@@ -18,8 +18,8 @@ class Game:
 
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
-        self.player_forms = {'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
-                            'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'blueberry.png': 28}
+        self.player_forms = {'watermelone.png': 64, 'dragonfruit.png': 60, 'orange.png': 52, 'apple.png': 56, 'lemon.png': 48,
+                            'kiwi.png': 44, 'strawberry.png': 40, 'plum.png': 36, 'cherry.png': 32, 'blueberry.png': 28}
 
         self.run()
 
