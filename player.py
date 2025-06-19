@@ -18,13 +18,15 @@ class Player:
 
 
     def update(self):
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        #self.rect = self.image.get_rect()
+        #self.x = self.rect.x
+        #self.y = self.rect.y
+        # self.width = self.rect.width
+        # self.height = self.rect.height
+        # ToDo: merge image x with normlale x so that it doesnt fall through and is moveble
+        #self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.movement(speed=100)
         self.surface.blit(self.image, self.rect)
-        #self.draw() # draws object during every update
-    
-    #def draw(self): # shape of object
-     #   pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.width, self.height))
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
