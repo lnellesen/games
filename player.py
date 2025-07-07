@@ -2,9 +2,9 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x=300, y=32, color='blueberry.png', size=64):
-        self.x = x # vertical starting position
-        self.y = y # horizontal starting position
+    def __init__(self, game, x=300, y=32, color="blueberry.png", size=64):
+        self.x = x  # vertical starting position
+        self.y = y  # horizontal starting position
         self.game = game
         self.color = color
         self.image = pygame.image.load(self.color)
@@ -12,19 +12,19 @@ class Player:
         self.height = size
         self.width = size
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.fall_velocity = 200 # fall velocity
-        self.on_ground = False # check if player is on the ground
+        self.fall_velocity = 200  # fall velocity
+        self.on_ground = False  # check if player is on the ground
         self.falling = False
-
+        self.hitbox = (self.x + 20, self.y, 28, 60) # todo sollte pro frucht in größe varieren
 
     def update(self):
-        #self.rect = self.image.get_rect()
-        #self.x = self.rect.x
-        #self.y = self.rect.y
+        # self.rect = self.image.get_rect()
+        # self.x = self.rect.x
+        # self.y = self.rect.y
         # self.width = self.rect.width
         # self.height = self.rect.height
         # ToDo: merge image x with normlale x so that it doesnt fall through and is moveble
-        #self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        # self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.movement(speed=100)
         self.surface.blit(self.image, self.rect)
 
@@ -75,28 +75,26 @@ class Player:
                 self.on_ground = True
                 self.falling = False
 
-
     def is_falling_on_top_of(self, other):
         # Check if this player is falling onto another player
         horizontally_aligned = (
-            self.x + self.width > other.x and
-            self.x < other.x + other.width
+            self.x + self.width > other.x and self.x < other.x + other.width
         )
         vertically_touching = (
-            self.y + self.height >= other.y and
-            self.y + self.height - self.fall_velocity * self.game.delta_time < other.y
+            self.y + self.height >= other.y
+            and self.y + self.height - self.fall_velocity * self.game.delta_time
+            < other.y
         )
         return horizontally_aligned and vertically_touching
-    
+
     def merge_with(self, other):
-        
         form_keys = list(self.game.player_forms.keys())
         self.game.players.remove(self)
         self.game.players.remove(other)
         new_color = form_keys[form_keys.index(self.color) - 1]
         new_size = self.game.player_forms[new_color]
         new_x = other.x
-        new_y = other.y 
+        new_y = other.y
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True

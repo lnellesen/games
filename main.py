@@ -1,8 +1,8 @@
 """Run/starts game."""
+
 import pygame
 import player
 import random
-
 
 
 class Game:
@@ -18,8 +18,18 @@ class Game:
 
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
-        self.player_forms = {'watermelone.png': 64, 'dragonfruit.png': 60, 'orange.png': 52, 'apple.png': 56, 'lemon.png': 48,
-                            'kiwi.png': 44, 'strawberry.png': 40, 'plum.png': 36, 'cherry.png': 32, 'blueberry.png': 28}
+        self.player_forms = {
+            "watermelone.png": 64,
+            "dragonfruit.png": 60,
+            "orange.png": 52,
+            "apple.png": 56,
+            "lemon.png": 48,
+            "kiwi.png": 44,
+            "strawberry.png": 40,
+            "plum.png": 36,
+            "cherry.png": 32,
+            "blueberry.png": 28,
+        }
 
         self.run()
 
@@ -32,24 +42,23 @@ class Game:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     running = False
 
-            
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((25, 25, 25))
-            
+
             for p in self.players:
                 p.update()
 
             if self.players[-1].on_ground:
                 self.add_new_player()
 
-
             pygame.display.update()
 
     pygame.quit()
 
     # function to add new player with randomly selected color and size
-    def add_new_player(self): 
+    def add_new_player(self):
         color, size = random.choice(list(self.player_forms.items()))
         self.players.append(player.Player(self, 300, 32, color=color, size=size))
+
 
 game = Game()
