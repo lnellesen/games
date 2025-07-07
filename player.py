@@ -17,15 +17,12 @@ class Player:
         self.falling = False
         self.hitbox = (self.x + 20, self.y, 28, 60) # todo sollte pro frucht in größe varieren
 
+
     def update(self):
-        # self.rect = self.image.get_rect()
-        # self.x = self.rect.x
-        # self.y = self.rect.y
-        # self.width = self.rect.width
-        # self.height = self.rect.height
-        # ToDo: merge image x with normlale x so that it doesnt fall through and is moveble
-        # self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.movement(speed=100)
+        self.rect = self.image.get_rect(centerx=self.x, centery=self.y)
+        self.width = self.rect.width
+        self.height = self.rect.height
+        self.movement(speed=200)
         self.surface.blit(self.image, self.rect)
 
     def movement(self, speed):
