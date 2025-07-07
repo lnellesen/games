@@ -2,12 +2,12 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x=300, y=32, color="blueberry.png", size=64):
+    def __init__(self, game, x=300, y=32, file="blueberry.png", size=64):
         self.x = x  # vertical starting position
         self.y = y  # horizontal starting position
         self.game = game
-        self.color = color
-        self.image = pygame.image.load(self.color)
+        self.file = file
+        self.image = pygame.image.load(self.file)
         self.surface = game.window
         self.height = size
         self.width = size
