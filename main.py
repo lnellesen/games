@@ -8,8 +8,8 @@ import random
 class Game:
     def __init__(self):
         pygame.init()
-        self.window_width = 800
-        self.window_height = 600
+        self.window_width = 1000
+        self.window_height = 800
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -19,16 +19,16 @@ class Game:
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
         self.player_forms = {
-            "watermelone.png": 64,
-            "dragonfruit.png": 60,
-            "orange.png": 52,
-            "apple.png": 56,
-            "lemon.png": 48,
-            "kiwi.png": 44,
-            "strawberry.png": 40,
-            "plum.png": 36,
-            "cherry.png": 32,
-            "blueberry.png": 28,
+            "watermelone_upgrade.jpeg": 64,
+            "dragonfruit_upgrade.jpeg": 60,
+            "orange_upgrade.jpeg": 52,
+            "apple_upgrade.jpeg": 56,
+            "lemon_upgrade.jpeg": 48,
+            "kiwi_upgrade.jpeg": 44,
+            "strawberry_upgrade.jpeg": 40,
+            "raspberry_upgrade.jpeg": 36,
+            "cherry_upgrade.jpeg": 32,
+            "blueberry_upgrade.jpeg": 28,
         }
 
         self.run()

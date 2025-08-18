@@ -2,7 +2,23 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x=300, y=32, file="blueberry.png", size=64):
+    """Class to store and define parameters for each player."""
+    def __init__(
+            self,
+            game,  # todo: get type
+            x: int = 300,
+            y: int = 32,
+            file: str = "blueberry_upgrade.jpeg",
+            size: int = 64
+    ) -> None:  # todo: file as path
+        """
+        Init for Player.
+
+        :param x (int): vertical starting position
+        :param y (int): horizontal starting position
+        :param game ():
+        :param file (str):
+        """
         self.x = x  # vertical starting position
         self.y = y  # horizontal starting position
         self.game = game
@@ -15,7 +31,7 @@ class Player:
         self.fall_velocity = 200  # fall velocity
         self.on_ground = False  # check if player is on the ground
         self.falling = False
-        self.hitbox = (self.x + 20, self.y, 28, 60) # todo sollte pro frucht in größe varieren
+        self.hitbox = (self.x + 20, self.y, 28, 60)  # todo sollte pro frucht in größe varieren
 
 
     def update(self):
