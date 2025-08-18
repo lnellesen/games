@@ -1,5 +1,6 @@
 import pygame
 import random
+import sys
 
 from fruits import LIST_PLAYERS, reshape_player
 
@@ -101,5 +102,16 @@ class Player(pygame.sprite.Sprite):
             text = font.render("YOU WON!", True, (255, 255, 255))
             self.surface.blit(text, (300, 250))
             pygame.display.flip()
-            pygame.time.delay(100000)
+            pygame.time.delay(1000)
             pygame.quit()
+            sys.exit()
+
+        if new_y <= 150 or other.rect.y <= 150:
+            pygame.init()
+            font = pygame.font.Font(None, 74)
+            text = font.render("GAME OVER :(", True, (255, 255, 255))
+            self.surface.blit(text, (300, 250))
+            pygame.display.flip()
+            pygame.time.delay(1000)
+            pygame.quit()
+            sys.exit()
