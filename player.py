@@ -2,15 +2,15 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, x=300, y=32, color='red', size=64):
+    def __init__(self, game, x=300, y=32, file='darkblue', size=64):
         super().__init__()
         self.game = game
-        self.color = color
+        self.file = file
         self.surface = game.window
         self.height = size
         self.width = size
         self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.color)
+        self.image.fill(self.file)
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
@@ -43,15 +43,9 @@ class Player(pygame.sprite.Sprite):
             for other in colliding:
                 if other is self:
                     continue
-                # check if merge is necessary
-                self.check_merge_collisions(other)
-
-                # check if new player sits on top of other players
-                if self.rect.bottom >= other.rect.top and self.rect.centery < other.rect.centery:
-                    self.rect.bottom = other.rect.top
-                    self.on_ground = True
-                    self.falling = False
-                    return
+                # Only handle if falling on top
+                if self.rect.bottom <= other.rect.top + 5:
+                    self.handle_collision(other)
 
             # Collision with the ground
             if self.rect.bottom >= self.game.screen_height:
@@ -61,43 +55,39 @@ class Player(pygame.sprite.Sprite):
 
 
 
-    def check_merge_collisions(self, other):
-        merged = True
-        while merged:
-            merged = False
-            colliding = pygame.sprite.spritecollide(self, self.game.players, False)
-            for other in colliding:
-                if other is self:
-                    continue
-                if self.color == other.color:
-                    self.merge_with(other)
-                    merged = True
-                    break
+    def handle_collision(self, other):
+        form_keys = list(self.game.player_forms.keys())
+
+        if self.file == other.file and form_keys.index(self.file) > 0:
+            self.merge_with(other)
+        else:
+            # stop falling on top of another player
+            self.rect.bottom = other.rect.top
+            self.on_ground = True
+            self.falling = False
 
     def check_chain_merge(self):
-        # Keep merging while colliding with same color player
-        merged = True
-        while merged:
-            merged = False
-            colliding = pygame.sprite.spritecollide(self, self.game.players, False)
-            for other in colliding:
-                if other is self:
-                    continue
-                if self.color == other.color:
-                    self.merge_with(other)
-                    merged = True
-                    break
+        collided = pygame.sprite.spritecollide(self, self.game.players, False)
+        for other in collided:
+            if other is self:
+                continue
+            # only merge if same color and size
+            if other.file == self.file and other.rect.size == self.rect.size:
+                self.merge_with(other)
+                break  # only merge one at a time and then re-check
 
     def merge_with(self, other):
         form_keys = list(self.game.player_forms.keys())
         self.kill()
         other.kill()
-        new_color = form_keys[form_keys.index(self.color) - 1]
+        new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
-        new_x = other.rect.x + (self.rect.width - new_size) / 2
-        new_y = other.rect.y + (self.rect.height - new_size)
-        merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
+        # vertical position of new player on top of player below and horizontally centered around other player
+        new_x = other.rect.x + (self.height - new_size) / 2
+        new_y = other.rect.y + (self.height - new_size)
+
+        merged = Player(self.game, new_x, new_y, file=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
-        # merged.check_merge_collisions(other)
+
         merged.check_chain_merge()

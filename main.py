@@ -38,10 +38,10 @@ class Game:
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((25, 25, 25))
 
-            self.players.update()  # updates all sprites
-            self.players.draw(self.window)  # draws all sprites
+            self.players.update()
+            self.players.draw(self.window)
 
-            last = list(self.players)[-1]  # get last added sprite
+            last = list(self.players)[-1]
             if last.on_ground:
                 self.add_new_player()
 
@@ -52,8 +52,8 @@ class Game:
 
     # function to add new player with randomly selected color and size
     def add_new_player(self, first=False):
-        color, size = random.choice(list(self.player_forms.items()))
-        p = player.Player(self, 300, 32, color=color, size=size)
+        color, size = random.choice(list(self.player_forms.items())[5:])
+        p = player.Player(self, 300, 32, file=color, size=size)
         self.players.add(p)
 
 game = Game()
