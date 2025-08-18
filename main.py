@@ -8,8 +8,8 @@ import random
 class Game:
     def __init__(self):
         pygame.init()
-        self.window_width = 800
-        self.window_height = 600
+        self.window_width = 400
+        self.window_height = 300
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
