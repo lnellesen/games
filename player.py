@@ -95,10 +95,7 @@ class Player(pygame.sprite.Sprite):
 
         merged.check_chain_merge()
 
-    def winning(self):
-        form_keys = list(self.game.player_forms.keys())
-        new_color=form_keys[form_keys.index(self.file) - 1]
-        if new_color == LIST_PLAYERS[8]:
+        if new_color == LIST_PLAYERS[0]:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("YOU WON!", True, (255, 255, 255))
