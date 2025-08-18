@@ -1,4 +1,7 @@
 import pygame
+import random
+
+from fruits import LIST_PLAYERS
 
 
 class Player:
@@ -8,7 +11,7 @@ class Player:
             game,  # todo: get type
             x: int = 300,
             y: int = 32,
-            file: str = "blueberry_upgrade.jpeg",
+            file: str = random.choice(LIST_PLAYERS),
             size: int = 64
     ) -> None:  # todo: file as path
         """
@@ -31,7 +34,7 @@ class Player:
         self.fall_velocity = 200  # fall velocity
         self.on_ground = False  # check if player is on the ground
         self.falling = False
-        self.hitbox = (self.x + 20, self.y, 28, 60)  # todo sollte pro frucht in größe varieren
+        self.hitbox = (self.x + 5, self.y, 28, 60)  # todo sollte pro frucht in größe varieren
 
 
     def update(self):

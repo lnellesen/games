@@ -3,6 +3,7 @@
 import pygame
 import player
 import random
+from fruits import reshape_player, LIST_PLAYERS
 
 
 class Game:
@@ -19,16 +20,16 @@ class Game:
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
         self.player_forms = {
-            "watermelone_upgrade.jpeg": 64,
-            "dragonfruit_upgrade.jpeg": 60,
-            "orange_upgrade.jpeg": 52,
-            "apple_upgrade.jpeg": 56,
-            "lemon_upgrade.jpeg": 48,
-            "kiwi_upgrade.jpeg": 44,
-            "strawberry_upgrade.jpeg": 40,
-            "raspberry_upgrade.jpeg": 36,
-            "cherry_upgrade.jpeg": 32,
-            "blueberry_upgrade.jpeg": 28,
+            LIST_PLAYERS[9]: 64,
+            LIST_PLAYERS[8]: 60,
+            LIST_PLAYERS[7]: 52,
+            LIST_PLAYERS[6]: 56,
+            LIST_PLAYERS[5]: 48,
+            LIST_PLAYERS[4]: 44,
+            LIST_PLAYERS[3]: 40,
+            LIST_PLAYERS[2]: 36,
+            LIST_PLAYERS[1]: 32,
+            LIST_PLAYERS[0]: 28,
         }
 
         self.run()
