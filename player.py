@@ -9,12 +9,14 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game, x=300, y=32, color=random.choice(LIST_PLAYERS), size=64):
         super().__init__()
         self.game = game
-        self.color = color
+        self.file = color
         self.surface = game.window
         self.height = size
         self.width = size
-        self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.color)
+        self.image = pygame.image.load(self.file)
+        self.surface = game.window
+        #self.image = pygame.Surface((self.width, self.height))
+        #self.image.fill(self.color)
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
@@ -22,10 +24,10 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.rect = self.image.get_rect(centerx=self.x, centery=self.y)
-        self.width = self.rect.width
-        self.height = self.rect.height
-        self.surface.blit(self.image, self.rect)
+        #self.rect = self.image.get_rect(centerx=self.x, centery=self.y)
+        #self.width = self.rect.width
+        #self.height = self.rect.height
+        #self.surface.blit(self.image, self.rect)
 
         keys = pygame.key.get_pressed()
 
@@ -67,7 +69,7 @@ class Player(pygame.sprite.Sprite):
     def handle_collision(self, other):
         form_keys = list(self.game.player_forms.keys())
 
-        if self.color == other.color and form_keys.index(self.color) > 0:
+        if self.file == other.file and form_keys.index(self.file) > 0:
             self.merge_with(other)
         else:
             # stop falling on top of another player
@@ -81,7 +83,7 @@ class Player(pygame.sprite.Sprite):
             if other is self:
                 continue
             # only merge if same color and size
-            if other.color == self.color and other.rect.size == self.rect.size:
+            if other.file == self.file and other.rect.size == self.rect.size:
                 self.merge_with(other)
                 break  # only merge one at a time and then re-check
 
@@ -89,7 +91,7 @@ class Player(pygame.sprite.Sprite):
         form_keys = list(self.game.player_forms.keys())
         self.kill()
         other.kill()
-        new_color = form_keys[form_keys.index(self.color) - 1]
+        new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.x + (self.height - new_size) / 2
