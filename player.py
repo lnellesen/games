@@ -15,8 +15,6 @@ class Player(pygame.sprite.Sprite):
         self.width = size
         self.image = pygame.image.load(self.file)
         self.surface = game.window
-        #self.image = pygame.Surface((self.width, self.height))
-        #self.image.fill(self.color)
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 200 # fall velocity
         self.on_ground = False # check if player is on the ground
@@ -24,11 +22,6 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-        #self.rect = self.image.get_rect(centerx=self.x, centery=self.y)
-        #self.width = self.rect.width
-        #self.height = self.rect.height
-        #self.surface.blit(self.image, self.rect)
-
         keys = pygame.key.get_pressed()
 
         # Horizontal movement

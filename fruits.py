@@ -10,8 +10,8 @@ LIST_PLAYERS = ["watermelone_upgrade.jpeg",
                 "lemon_upgrade.jpeg",
                 "kiwi_upgrade.jpeg",
                 "strawberry_upgrade.jpeg",
-                "raspberry_upgrade.jpeg",
                 "cherry_upgrade.jpeg",
+                "raspberry_upgrade.jpeg",
                 "blueberry_upgrade.jpeg"]
 
 def reshape_player(file: str)-> np.ndarray:
