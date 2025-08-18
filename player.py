@@ -6,7 +6,7 @@ from fruits import LIST_PLAYERS
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, x=300, y=32, color='red', size=64):
+    def __init__(self, game, x=300, y=32, color=random.choice(LIST_PLAYERS), size=64):
         super().__init__()
         self.game = game
         self.color = color
