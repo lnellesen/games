@@ -16,10 +16,12 @@ class Game:
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
 
-        # list of all players in the game - it gets extended whenever a new player is added
-        self.players = [player.Player(self)]
         self.player_forms = {'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
-                            'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28}
+                             'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28}
+
+        self.players = pygame.sprite.Group()
+
+        self.add_new_player(first=True)
 
         self.run()
 
@@ -35,11 +37,12 @@ class Game:
             
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((25, 25, 25))
-            
-            for p in self.players:
-                p.update()
 
-            if self.players[-1].on_ground:
+            self.players.update()  # updates all sprites
+            self.players.draw(self.window)  # draws all sprites
+
+            last = list(self.players)[-1]  # get last added sprite
+            if last.on_ground:
                 self.add_new_player()
 
 
@@ -48,8 +51,9 @@ class Game:
     pygame.quit()
 
     # function to add new player with randomly selected color and size
-    def add_new_player(self): 
+    def add_new_player(self, first=False):
         color, size = random.choice(list(self.player_forms.items()))
-        self.players.append(player.Player(self, 300, 32, color=color, size=size))
+        p = player.Player(self, 300, 32, color=color, size=size)
+        self.players.add(p)
 
 game = Game()
