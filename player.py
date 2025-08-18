@@ -115,7 +115,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         new_y = other.rect.y + (self.height - new_size)
-        if new_y <= 150 or other.rect.y <= 150:
+        if new_y <= 200 or other.rect.y <= 200:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("GAME OVER :(", True, (255, 255, 255))
