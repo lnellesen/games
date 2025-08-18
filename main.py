@@ -32,6 +32,10 @@ class Game:
             LIST_PLAYERS[0]: 28,
         }
 
+        self.players = pygame.sprite.Group()
+
+        self.add_new_player(first=True)
+
         self.run()
 
     def run(self):
@@ -43,13 +47,15 @@ class Game:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     running = False
 
+            
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((25, 25, 25))
 
-            for p in self.players:
-                p.update()
+            self.players.update()  # updates all sprites
+            self.players.draw(self.window)  # draws all sprites
 
-            if self.players[-1].on_ground:
+            last = list(self.players)[-1]  # get last added sprite
+            if last.on_ground:
                 self.add_new_player()
 
             pygame.display.update()
@@ -57,9 +63,9 @@ class Game:
     pygame.quit()
 
     # function to add new player with randomly selected color and size
-    def add_new_player(self):
-        file, size = random.choice(list(self.player_forms.items()))
-        self.players.append(player.Player(self, 300, 32, file=file, size=size))
-
+    def add_new_player(self, first=False):
+        color, size = random.choice(list(self.player_forms.items()))
+        p = player.Player(self, 300, 32, color=color, size=size)
+        self.players.add(p)
 
 game = Game()

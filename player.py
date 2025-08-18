@@ -4,114 +4,99 @@ import random
 from fruits import LIST_PLAYERS
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(
-            self,
-            game,  # todo: get type
-            x: int = 300,
-            y: int = 32,
-            file: str = random.choice(LIST_PLAYERS),
-            size: int = 64
-    ) -> None:  # todo: file as path
-        """
-        Init for Player.
-
-        :param x (int): vertical starting position
-        :param y (int): horizontal starting position
-        :param game ():
-        :param file (str):
-        """
-        self.x = x  # vertical starting position
-        self.y = y  # horizontal starting position
+    def __init__(self, game, x=300, y=32, color='red', size=64):
+        super().__init__()
         self.game = game
-        self.file = file
-        self.image = pygame.image.load(self.file)
+        self.color = color
         self.surface = game.window
         self.height = size
         self.width = size
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.fall_velocity = 200  # fall velocity
-        self.on_ground = False  # check if player is on the ground
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(self.color)
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.fall_velocity = 200 # fall velocity
+        self.on_ground = False # check if player is on the ground
         self.falling = False
-        self.hitbox = (self.x + 5, self.y, 28, 60)  # todo sollte pro frucht in größe varieren
 
 
     def update(self):
         self.rect = self.image.get_rect(centerx=self.x, centery=self.y)
         self.width = self.rect.width
         self.height = self.rect.height
-        self.movement(speed=200)
         self.surface.blit(self.image, self.rect)
 
-    def movement(self, speed):
         keys = pygame.key.get_pressed()
 
+        # Horizontal movement
         if not self.on_ground and not self.falling:
             if keys[pygame.K_RIGHT]:
-                self.x += speed * self.game.delta_time
-                # right border for rectangle
-                if self.x > self.game.screen_width - self.width:
-                    self.x = self.game.screen_width - self.width
-
+                self.rect.x += 100 * self.game.delta_time
+                if self.rect.right > self.game.screen_width:
+                    self.rect.right = self.game.screen_width
             elif keys[pygame.K_LEFT]:
-                self.x -= speed * self.game.delta_time
-                # left border for rectangle
-                if self.x < 0:
-                    self.x = 0
+                self.rect.x -= 100 * self.game.delta_time
+                if self.rect.left < 0:
+                    self.rect.left = 0
 
+        # Start falling
         if keys[pygame.K_DOWN] and not self.on_ground and not self.falling:
             self.falling = True
-        if not self.on_ground and self.falling:
-            self.y += self.fall_velocity * self.game.delta_time
 
-            # Check for collision with other players
-            for other in self.game.players:
+        # Falling
+        if not self.on_ground and self.falling:
+            self.rect.y += self.fall_velocity * self.game.delta_time
+
+            colliding = pygame.sprite.spritecollide(self, self.game.players, False)
+            for other in colliding:
                 if other is self:
                     continue
-                if self.is_falling_on_top_of(other) and self.color == other.color:
-                    form_keys = list(self.game.player_forms.keys())
-                    # merge with other player it not largest possible player
-                    if form_keys.index(self.color) > 0:
-                        self.merge_with(other)
-                    else:
-                        self.y = other.y - self.height
-                        self.on_ground = True
-                        self.falling = False
-                    return
-                elif self.is_falling_on_top_of(other):
-                    self.y = other.y - self.height
-                    self.on_ground = True
-                    self.falling = False
-                    return
+                # Only handle if falling on top
+                if self.rect.bottom <= other.rect.top + 5:
+                    self.handle_collision(other)
 
-            # Check collision with the ground
-            if self.y >= self.game.screen_height - self.height:
-                self.y = self.game.screen_height - self.height
+            # Collision with the ground
+            if self.rect.bottom >= self.game.screen_height:
+                self.rect.bottom = self.game.screen_height
                 self.on_ground = True
                 self.falling = False
 
-    def is_falling_on_top_of(self, other):
-        # Check if this player is falling onto another player
-        horizontally_aligned = (
-            self.x + self.width > other.x and self.x < other.x + other.width
-        )
-        vertically_touching = (
-            self.y + self.height >= other.y
-            and self.y + self.height - self.fall_velocity * self.game.delta_time
-            < other.y
-        )
-        return horizontally_aligned and vertically_touching
+
+
+    def handle_collision(self, other):
+        form_keys = list(self.game.player_forms.keys())
+
+        if self.color == other.color and form_keys.index(self.color) > 0:
+            self.merge_with(other)
+        else:
+            # stop falling on top of another player
+            self.rect.bottom = other.rect.top
+            self.on_ground = True
+            self.falling = False
+
+    def check_chain_merge(self):
+        collided = pygame.sprite.spritecollide(self, self.game.players, False)
+        for other in collided:
+            if other is self:
+                continue
+            # only merge if same color and size
+            if other.color == self.color and other.rect.size == self.rect.size:
+                self.merge_with(other)
+                break  # only merge one at a time and then re-check
 
     def merge_with(self, other):
         form_keys = list(self.game.player_forms.keys())
-        self.game.players.remove(self)
-        self.game.players.remove(other)
+        self.kill()
+        other.kill()
         new_color = form_keys[form_keys.index(self.color) - 1]
         new_size = self.game.player_forms[new_color]
-        new_x = other.x
-        new_y = other.y
+        # vertical position of new player on top of player below and horizontally centered around other player
+        new_x = other.rect.x + (self.height - new_size) / 2
+        new_y = other.rect.y + (self.height - new_size)
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True
-        self.game.players.append(merged)
+        self.game.players.add(merged)
+
+        merged.check_chain_merge()
