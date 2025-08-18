@@ -67,14 +67,32 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def check_chain_merge(self):
-        collided = pygame.sprite.spritecollide(self, self.game.players, False)
+        def vertically_touching_or_colliding(sprite, group):
+            result = []
+            for other in group:
+                if other is sprite:
+                    continue
+                if sprite.rect.colliderect(other.rect):
+                    result.append(other)
+                    continue
+                vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
+                horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
+                if vertical_touch and horizontal_overlap:
+                    result.append(other)
+            return result
+        # print([(sprite.file, sprite.rect.size) for sprite in self.game.players])
+        collided = vertically_touching_or_colliding(self, self.game.players)
+        # collided = pygame.sprite.spritecollide(self, self.game.players, False)
         for other in collided:
-            if other is self:
+            if other.rect is self.rect:
                 continue
-            # only merge if same color and size
-            if other.file == self.file and other.rect.size == self.rect.size:
+            if other.file == self.file:
                 self.merge_with(other)
-                break  # only merge one at a time and then re-check
+                # recursively check the new merged block
+                for sprite in self.game.players:
+                    if sprite.file == self.file:
+                        sprite.check_chain_merge()
+                return
 
     def merge_with(self, other):
         form_keys = list(self.game.player_forms.keys())
@@ -89,5 +107,5 @@ class Player(pygame.sprite.Sprite):
         merged = Player(self.game, new_x, new_y, file=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
-
+        print([(sprite.file, sprite.rect.size) for sprite in self.game.players])
         merged.check_chain_merge()
