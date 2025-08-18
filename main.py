@@ -10,7 +10,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.window_width = 1000
-        self.window_height = 800
+        self.window_height = 700
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -64,7 +64,7 @@ class Game:
 
     # function to add new player with randomly selected color and size
     def add_new_player(self, first=False):
-        color, size = random.choice(list(self.player_forms.items()))
+        color, size = random.choice(list(self.player_forms.items())[5:])
         p = player.Player(self, 300, 32, color=color, size=size)
         self.players.add(p)
 
