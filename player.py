@@ -57,8 +57,6 @@ class Player(pygame.sprite.Sprite):
                 self.on_ground = True
                 self.falling = False
 
-
-
     def handle_collision(self, other):
         form_keys = list(self.game.player_forms.keys())
 
@@ -95,7 +93,12 @@ class Player(pygame.sprite.Sprite):
         self.game.players.add(merged)
 
         merged.check_chain_merge()
+        merged.winning()
+        merged.game_over(other)
 
+    def winning(self):
+        form_keys = list(self.game.player_forms.keys())
+        new_color = form_keys[form_keys.index(self.file) - 1]
         if new_color == LIST_PLAYERS[0]:
             pygame.init()
             font = pygame.font.Font(None, 74)
@@ -106,6 +109,12 @@ class Player(pygame.sprite.Sprite):
             pygame.quit()
             sys.exit()
 
+
+    def game_over(self, other):
+        form_keys = list(self.game.player_forms.keys())
+        new_color = form_keys[form_keys.index(self.file) - 1]
+        new_size = self.game.player_forms[new_color]
+        new_y = other.rect.y + (self.height - new_size)
         if new_y <= 150 or other.rect.y <= 150:
             pygame.init()
             font = pygame.font.Font(None, 74)

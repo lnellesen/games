@@ -3,7 +3,7 @@
 import pygame
 import player
 import random
-from fruits import reshape_player, LIST_PLAYERS
+from fruits import LIST_PLAYERS
 
 
 class Game:
@@ -64,7 +64,7 @@ class Game:
 
     # function to add new player with randomly selected color and size
     def add_new_player(self, first=False):
-        color, size = random.choice(list(self.player_forms.items())[5:])
+        color, size = random.choice(list(self.player_forms.items())[6:])
         p = player.Player(self, 300, 32, color=color, size=size)
         self.players.add(p)
 
