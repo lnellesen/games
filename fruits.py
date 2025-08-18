@@ -2,6 +2,7 @@
 import numpy as np
 from skimage.transform import resize
 import matplotlib.pyplot as plt
+import pygame
 
 LIST_PLAYERS = ["watermelone_upgrade.jpeg",
                 "dragonfruit_upgrade.jpeg",
@@ -14,8 +15,15 @@ LIST_PLAYERS = ["watermelone_upgrade.jpeg",
                 "raspberry_upgrade.jpeg",
                 "blueberry_upgrade.jpeg"]
 
-def reshape_player(file: str)-> np.ndarray:
+def reshape_player(file: str):
     im = plt.imread(file)
-    res = resize(im, (im.shape[1]*0.9, im.shape[0]*0.9))
-    return res
+    res = resize(im, (im.shape[0]*0.8, im.shape[1]*0.8))#, anti_aliasing=True)
+    plt.imsave('resized_image' + file[:-5] + '.jpg', (res * 255).astype(np.uint8))
+    return pygame.image.load('resized_image' + file[:-5] + '.jpg')
+
+
+# for file in LIST_PLAYERS:
+#     resized_image = reshape_player(file)
+#     plt.imsave('resized_image'+file[:-5]+'.jpg', (resized_image * 255).astype(np.uint8))
+#     #plt.show()
 

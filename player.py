@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from fruits import LIST_PLAYERS
+from fruits import LIST_PLAYERS, reshape_player
 
 
 class Player(pygame.sprite.Sprite):
@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.surface = game.window
         self.height = size
         self.width = size
-        self.image = pygame.image.load(self.file)
+        self.image = reshape_player(self.file)
         self.surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 200 # fall velocity
