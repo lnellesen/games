@@ -10,7 +10,6 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.file = color
-        self.surface = game.window
         self.height = size
         self.width = size
         self.image = reshape_player(self.file)
@@ -95,3 +94,15 @@ class Player(pygame.sprite.Sprite):
         self.game.players.add(merged)
 
         merged.check_chain_merge()
+
+    def winning(self):
+        form_keys = list(self.game.player_forms.keys())
+        new_color=form_keys[form_keys.index(self.file) - 1]
+        if new_color == LIST_PLAYERS[8]:
+            pygame.init()
+            font = pygame.font.Font(None, 74)
+            text = font.render("YOU WON!", True, (255, 255, 255))
+            self.surface.blit(text, (300, 250))
+            pygame.display.flip()
+            pygame.time.delay(100000)
+            pygame.quit()
