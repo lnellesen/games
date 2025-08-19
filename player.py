@@ -53,6 +53,8 @@ class Player(pygame.sprite.Sprite):
                 self.on_ground = True
                 self.falling = False
 
+            self.apply_gravity()
+
 
 
     def handle_collision(self, other):
@@ -93,6 +95,22 @@ class Player(pygame.sprite.Sprite):
                         sprite.check_chain_merge()
                 return
 
+    def resolve_overlaps(self, sprite):
+        while True:
+            overlapped = None
+            for other in self.game.players:
+                if other is sprite:
+                    continue
+                if sprite.rect.colliderect(other.rect):
+                    overlapped = other
+                    break
+            if overlapped:
+                # moves player to the top of the other overlapping player
+                sprite.rect.bottom = overlapped.rect.top
+            else:
+                break
+
+
     def apply_gravity(self):
         for sprite in self.game.players:
             if sprite.on_ground:
@@ -127,5 +145,6 @@ class Player(pygame.sprite.Sprite):
         merged = Player(self.game, new_x, new_y, file=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
+        self.resolve_overlaps(merged)
         merged.check_chain_merge()
         self.apply_gravity()
