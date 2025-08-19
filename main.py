@@ -8,8 +8,8 @@ from fruits import LIST_PLAYERS
 class Game:
     def __init__(self):
         pygame.init()
-        self.window_width = 1000
-        self.window_height = 700
+        self.window_width = 800
+        self.window_height = 600
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -48,7 +48,7 @@ class Game:
 
             
             self.delta_time = self.clock.tick(60) / 1000
-            self.window.fill((25, 25, 25))
+            self.window.fill((255, 255, 255))
 
             self.players.update()
             self.players.draw(self.window)
@@ -64,7 +64,7 @@ class Game:
 
     # function to add new player with randomly selected color and size
     def add_new_player(self, first=False):
-        fruits, size = random.choice(list(self.player_forms.items())[7:])
+        fruits, size = random.choice(list(self.player_forms.items())[6:])
         p = player.Player(self, 300, 32, fruits=fruits, size=size)
         self.players.add(p)
 

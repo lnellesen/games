@@ -27,11 +27,11 @@ class Player(pygame.sprite.Sprite):
         # Horizontal movement
         if not self.on_ground and not self.falling:
             if keys[pygame.K_RIGHT]:
-                self.rect.x += 100 * self.game.delta_time
+                self.rect.x += 150 * self.game.delta_time
                 if self.rect.right > self.game.screen_width:
                     self.rect.right = self.game.screen_width
             elif keys[pygame.K_LEFT]:
-                self.rect.x -= 100 * self.game.delta_time
+                self.rect.x -= 150 * self.game.delta_time
                 if self.rect.left < 0:
                     self.rect.left = 0
 
@@ -66,6 +66,8 @@ class Player(pygame.sprite.Sprite):
 
         if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:
             self.merge_with(other)
+            # in case same fruits are the are merged again
+            self.check_chain_merge()
         else:
             # stop falling on top of another player
             self.rect.bottom = other.rect.top
@@ -122,7 +124,7 @@ class Player(pygame.sprite.Sprite):
                         sprite.falling = True
 
 
-    def explode_cluster(self, center_sprite, push=10):
+    def explode_cluster(self, center_sprite, push=30):
         visited = set()
         to_check = [center_sprite]
 
@@ -131,32 +133,59 @@ class Player(pygame.sprite.Sprite):
             visited.add(sprite)
 
             for other in list(self.game.players):
-                if other is center_sprite:
-                    continue
-                if other in visited:
+                if other is center_sprite or other in visited:
                     continue
 
                 if sprite.rect.colliderect(other.rect):
-                    # determins which direction to move
+                    # determines which direction to move
                     dx = other.rect.centerx - center_sprite.rect.centerx
                     dy = other.rect.centery - center_sprite.rect.centery
 
+                    # Default movement vector
+                    move_x, move_y = 0, 0
+
                     if abs(dx) > abs(dy):
-                        # horizontal overlap -> horizontal movement
+                        # horizontal push
                         if dx > 0:
-                            other.rect.x += push
+                            # Push right, but only if not too close to right edge
+                            if other.rect.right <= self.game.screen_width:
+                                move_x = push
+                            else:
+                                move_x = -push
                         else:
-                            other.rect.x -= push
+                            # Push left, but only if not too close to left edge
+                            if other.rect.left >= 0:
+                                move_x = -push
+                            else:
+                                move_x = push  # push right instead
+
                     else:
                         # vertical overlap -> vertical movement
                         if dy < 0:
-                            other.rect.y -= push * 10
+                            move_y -= push * 10
+
+                    # Apply movement
+                    other.rect.x += move_x
+                    other.rect.y += move_y
 
                     # window edges
                     if other.rect.left < 0:
                         other.rect.left = 0
                     if other.rect.right > self.game.screen_width:
                         other.rect.right = self.game.screen_width
+
+                    # # Collision resolution: if overlapping after push, separate
+                    # for more in self.game.players:
+                    #     if more is other or more is center_sprite:
+                    #         continue
+                    #     if other.rect.colliderect(more.rect):
+                    #         # push away slightly
+                    #         if move_x > 0:  # pushed right
+                    #             other.rect.right = more.rect.left
+                    #         elif move_x < 0:  # pushed left
+                    #             other.rect.bottom = more.rect.top
+                    #         elif move_y < 0:  # pushed up
+                    #             other.rect.top = more.rect.bottom
 
                     # check neighbors of neighbors
                     to_check.append(other)
@@ -202,7 +231,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         new_size = self.game.player_forms[new_color]
         new_y = other.rect.y + (self.height - new_size)
-        if new_y <= 150 or other.rect.y <= 150:
+        if new_y <= 100 or other.rect.y <= 100:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("GAME OVER :(", True, (255, 255, 255))
