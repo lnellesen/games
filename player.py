@@ -7,13 +7,13 @@ from fruits import LIST_PLAYERS, reshape_player
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, x=300, y=32, color=random.choice(LIST_PLAYERS), size=64):
+    def __init__(self, game, x=300, y=32, fruit=random.choice(LIST_PLAYERS), size=64):
         super().__init__()
         self.game = game
-        self.file = color
+        self.fruit = fruit
         self.height = size
         self.width = size
-        self.image = reshape_player(self.file)
+        self.image = reshape_player(self.fruit)
         self.surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 300 # fall velocity
@@ -64,7 +64,7 @@ class Player(pygame.sprite.Sprite):
     def handle_collision(self, other):
         form_keys = list(self.game.player_forms.keys())
 
-        if self.file == other.file and form_keys.index(self.file) > 0:
+        if self.fruit == other.fruit and form_keys.index(self.fruit) > 0:
             self.merge_with(other)
         else:
             # stop falling on top of another player
@@ -95,7 +95,7 @@ class Player(pygame.sprite.Sprite):
             if other.rect is self.rect:
                 continue
             # only merge if same color and size
-            if other.file == self.file and other.rect.size == self.rect.size:
+            if other.fruit == self.fruit and other.rect.size == self.rect.size:
                 self.merge_with(other)
                 # recursively check the new merged block
                 for sprite in self.game.players:
@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
         form_keys = list(self.game.player_forms.keys())
         self.kill()
         other.kill()
-        new_color = form_keys[form_keys.index(self.file) - 1]
+        new_color = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.x + (self.rect.width - new_size) / 2
@@ -186,7 +186,7 @@ class Player(pygame.sprite.Sprite):
 
     def winning(self):
         form_keys = list(self.game.player_forms.keys())
-        new_color = form_keys[form_keys.index(self.file) - 1]
+        new_color = form_keys[form_keys.index(self.fruit) - 1]
         if new_color == LIST_PLAYERS[8]:
             pygame.init()
             font = pygame.font.Font(None, 74)
@@ -200,7 +200,7 @@ class Player(pygame.sprite.Sprite):
 
     def game_over(self, other):
         form_keys = list(self.game.player_forms.keys())
-        new_color = form_keys[form_keys.index(self.file) - 1]
+        new_color = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.player_forms[new_color]
         new_y = other.rect.y + (self.height - new_size)
         if new_y <= 150 or other.rect.y <= 150:

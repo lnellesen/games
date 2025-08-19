@@ -64,8 +64,8 @@ class Game:
 
     # function to add new player with randomly selected color and size
     def add_new_player(self, first=False):
-        color, size = random.choice(list(self.player_forms.items())[6:])
-        p = player.Player(self, 300, 32, color=color, size=size)
+        fruit, size = random.choice(list(self.player_forms.items())[6:])
+        p = player.Player(self, 300, 32, fruit=fruit, size=size)
         self.players.add(p)
 
 game = Game()
