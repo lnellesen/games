@@ -151,17 +151,15 @@ class Player(pygame.sprite.Sprite):
                     else:
                         # vertical overlap -> vertical movement
                         if dy < 0:
-                            other.rect.y -= push
+                            other.rect.y -= push * 10
 
                     # window edges
                     if other.rect.left < 0:
                         other.rect.left = 0
                     if other.rect.right > self.game.screen_width:
                         other.rect.right = self.game.screen_width
-                    if other.rect.top < 0:
-                        other.rect.top = 0
 
-                    # check neighbors or neighbors
+                    # check neighbors of neighbors
                     to_check.append(other)
                     visited.add(other)
 
@@ -174,8 +172,8 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.x + (self.width - new_size) / 2
-        new_y = other.rect.y + (self.height - new_size)
+        new_x = other.rect.x + (self.rect.width - new_size) / 2
+        new_y = other.rect.y + (self.rect.height - new_size)
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True
@@ -205,7 +203,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         new_y = other.rect.y + (self.height - new_size)
-        if new_y <= 200 or other.rect.y <= 200:
+        if new_y <= 150 or other.rect.y <= 150:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("GAME OVER :(", True, (255, 255, 255))
