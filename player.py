@@ -158,10 +158,8 @@ class Player(pygame.sprite.Sprite):
                         other.rect.left = 0
                     if other.rect.right > self.game.screen_width:
                         other.rect.right = self.game.screen_width
-                    if other.rect.top < 0:
-                        other.rect.top = 0
 
-                    # check neighbors or neighbors
+                    # check neighbors of neighbors
                     to_check.append(other)
                     visited.add(other)
 
