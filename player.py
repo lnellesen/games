@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
+        """Check the positions of the player to move them."""
         keys = pygame.key.get_pressed()
 
         # Horizontal movement
@@ -62,6 +63,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def handle_collision(self, other):
+        """Check if a colision results in a merge or not."""
         form_keys = list(self.game.player_forms.keys())
 
         if self.fruit == other.fruit and form_keys.index(self.fruit) > 0:
@@ -73,7 +75,9 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def check_chain_merge(self):
+        """Check if multiple merges need to happen consecutively."""
         def touching_or_colliding(sprite, group):
+            """Check if the players are touching or colliding."""
             result = []
             for other in group:
                 if other is sprite:
@@ -104,6 +108,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def apply_gravity(self):
+        """Check that no player hangs in the air."""
         for sprite in self.game.players:
             if sprite.on_ground:
                 if sprite.rect.bottom < self.game.screen_height:
@@ -123,6 +128,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def explode_cluster(self, center_sprite, push=10):
+        """Move players if a new player after a colision needs more space."""
         visited = set()
         to_check = [center_sprite]
 
@@ -165,6 +171,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def merge_with(self, other):
+        """Merge two players."""
         form_keys = list(self.game.player_forms.keys())
         self.kill()
         other.kill()
@@ -184,6 +191,7 @@ class Player(pygame.sprite.Sprite):
         merged.game_over(other)
 
     def winning(self):
+        """Notify if the last fruit was created and the game is won."""
         form_keys = list(self.game.player_forms.keys())
         new_color = form_keys[form_keys.index(self.fruit) - 1]
         if new_color == LIST_PLAYERS[8]:
@@ -198,6 +206,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def game_over(self, other):
+        """Notify if the max height was reached and the game is lost."""
         form_keys = list(self.game.player_forms.keys())
         new_color = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.player_forms[new_color]
