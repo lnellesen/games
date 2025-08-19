@@ -94,8 +94,7 @@ class Player(pygame.sprite.Sprite):
         for other in collided:
             if other.rect is self.rect:
                 continue
-            # only merge if same color and size
-            if other.file == self.file and other.rect.size == self.rect.size:
+            if other.file == self.file:
                 self.merge_with(other)
                 # recursively check the new merged block
                 for sprite in self.game.players:
