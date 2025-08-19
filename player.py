@@ -57,6 +57,10 @@ class Player(pygame.sprite.Sprite):
                 self.on_ground = True
                 self.falling = False
 
+            self.apply_gravity()
+
+
+
     def handle_collision(self, other):
         form_keys = list(self.game.player_forms.keys())
 
@@ -69,14 +73,99 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def check_chain_merge(self):
-        collided = pygame.sprite.spritecollide(self, self.game.players, False)
+        def touching_or_colliding(sprite, group):
+            result = []
+            for other in group:
+                if other is sprite:
+                    continue
+                if sprite.rect.colliderect(other.rect):
+                    result.append(other)
+                    continue
+                vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
+                horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
+                horizontal_touch =  sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
+                vertical_overlap = sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
+                if (vertical_touch and horizontal_overlap) or (horizontal_touch and vertical_overlap):
+                    result.append(other)
+            return result
+
+        collided = touching_or_colliding(self, self.game.players)
+        # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows
         for other in collided:
-            if other is self:
+            if other.rect is self.rect:
                 continue
             # only merge if same color and size
             if other.file == self.file and other.rect.size == self.rect.size:
                 self.merge_with(other)
-                break  # only merge one at a time and then re-check
+                # recursively check the new merged block
+                for sprite in self.game.players:
+                    if sprite.file == self.file:
+                        sprite.check_chain_merge()
+                return
+
+
+    def apply_gravity(self):
+        for sprite in self.game.players:
+            if sprite.on_ground:
+                if sprite. rect.bottom < self.game.screen_height:
+                    # check if a player is directly below
+                    below =[
+                        other for other in self.game.players if other is not sprite
+                        and sprite.rect.bottom == other.rect.top
+                        and sprite.rect.right > other.rect.left
+                        and sprite.rect.left < other.rect.right
+                    ]
+                    if below:
+                        sprite.on_ground = True
+                        sprite.falling = False
+                    if not below:
+                        sprite.on_ground = False
+                        sprite.falling = True
+
+
+    def explode_cluster(self, center_sprite, push=10):
+        visited = set()
+        to_check = [center_sprite]
+
+        while to_check:
+            sprite = to_check.pop()
+            visited.add(sprite)
+
+            for other in list(self.game.players):
+                if other is center_sprite:
+                    continue
+                if other in visited:
+                    continue
+
+                if sprite.rect.colliderect(other.rect):
+                    # determins which direction to move
+                    dx = other.rect.centerx - center_sprite.rect.centerx
+                    dy = other.rect.centery - center_sprite.rect.centery
+
+                    if abs(dx) > abs(dy):
+                        # horizontal overlap -> horizontal movement
+                        if dx > 0:
+                            other.rect.x += push
+                        else:
+                            other.rect.x -= push
+                    else:
+                        # vertical overlap -> vertical movement
+                        if dy < 0:
+                            other.rect.y -= push
+
+                    # window edges
+                    if other.rect.left < 0:
+                        other.rect.left = 0
+                    if other.rect.right > self.game.screen_width:
+                        other.rect.right = self.game.screen_width
+                    if other.rect.top < 0:
+                        other.rect.top = 0
+
+                    # check neighbors or neighbors
+                    to_check.append(other)
+                    visited.add(other)
+
+
 
     def merge_with(self, other):
         form_keys = list(self.game.player_forms.keys())
@@ -91,8 +180,9 @@ class Player(pygame.sprite.Sprite):
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
-
+        self.explode_cluster(merged)
         merged.check_chain_merge()
+        self.apply_gravity()
         merged.winning()
         merged.game_over(other)
 
