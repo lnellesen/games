@@ -94,12 +94,11 @@ class Player(pygame.sprite.Sprite):
         for other in collided:
             if other.rect is self.rect:
                 continue
-            # only merge if same color and size
             if other.fruit == self.fruit and other.rect.size == self.rect.size:
                 self.merge_with(other)
                 # recursively check the new merged block
                 for sprite in self.game.players:
-                    if sprite.file == self.file:
+                    if sprite.fruit == self.fruit:
                         sprite.check_chain_merge()
                 return
 
@@ -175,7 +174,7 @@ class Player(pygame.sprite.Sprite):
         new_x = other.rect.x + (self.rect.width - new_size) / 2
         new_y = other.rect.y + (self.rect.height - new_size)
 
-        merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
+        merged = Player(self.game, new_x, new_y, fruit=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
         self.explode_cluster(merged)
