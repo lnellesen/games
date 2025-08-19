@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.image = reshape_player(self.file)
         self.surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.fall_velocity = 200 # fall velocity
+        self.fall_velocity = 300 # fall velocity
         self.on_ground = False # check if player is on the ground
         self.falling = False
 
@@ -107,7 +107,7 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         for sprite in self.game.players:
             if sprite.on_ground:
-                if sprite. rect.bottom < self.game.screen_height:
+                if sprite.rect.bottom < self.game.screen_height:
                     # check if a player is directly below
                     below =[
                         other for other in self.game.players if other is not sprite
@@ -174,7 +174,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.x + (self.height - new_size) / 2
+        new_x = other.rect.x + (self.width - new_size) / 2
         new_y = other.rect.y + (self.height - new_size)
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
@@ -189,7 +189,7 @@ class Player(pygame.sprite.Sprite):
     def winning(self):
         form_keys = list(self.game.player_forms.keys())
         new_color = form_keys[form_keys.index(self.file) - 1]
-        if new_color == LIST_PLAYERS[0]:
+        if new_color == LIST_PLAYERS[8]:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("YOU WON!", True, (255, 255, 255))
