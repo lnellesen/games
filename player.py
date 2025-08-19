@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def check_chain_merge(self):
-        def vertically_touching_or_colliding(sprite, group):
+        def touching_or_colliding(sprite, group):
             result = []
             for other in group:
                 if other is sprite:
@@ -80,10 +80,13 @@ class Player(pygame.sprite.Sprite):
                     continue
                 vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
                 horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
-                if vertical_touch and horizontal_overlap:
+                horizontal_touch =  sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
+                vertical_overlap = sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
+                if (vertical_touch and horizontal_overlap) or (horizontal_touch and vertical_overlap):
                     result.append(other)
             return result
-        collided = vertically_touching_or_colliding(self, self.game.players)
+
+        collided = touching_or_colliding(self, self.game.players)
         # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows
         for other in collided:
             if other.rect is self.rect:
