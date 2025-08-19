@@ -20,16 +20,16 @@ class Game:
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
         self.player_forms = {
-            LIST_PLAYERS[0]: 64,
-            LIST_PLAYERS[1]: 60,
-            LIST_PLAYERS[2]: 52,
-            LIST_PLAYERS[3]: 56,
-            LIST_PLAYERS[4]: 48,
-            LIST_PLAYERS[5]: 44,
-            LIST_PLAYERS[6]: 40,
-            LIST_PLAYERS[7]: 36,
-            LIST_PLAYERS[8]: 32,
-            LIST_PLAYERS[9]: 28,
+            LIST_PLAYERS[0]: 278,
+            LIST_PLAYERS[1]: 272,
+            LIST_PLAYERS[2]: 241,
+            LIST_PLAYERS[3]: 234,
+            LIST_PLAYERS[4]: 210,
+            LIST_PLAYERS[5]: 173,
+            LIST_PLAYERS[6]: 149,
+            LIST_PLAYERS[7]: 126,
+            LIST_PLAYERS[8]: 109,
+            LIST_PLAYERS[9]: 79,
         }
 
         self.players = pygame.sprite.Group()

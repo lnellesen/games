@@ -174,8 +174,8 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.x + (self.width - new_size) / 2
-        new_y = other.rect.y + (self.height - new_size)
+        new_x = other.rect.x + (self.rect.width - new_size) / 2
+        new_y = other.rect.y + (self.rect.height - new_size)
 
         merged = Player(self.game, new_x, new_y, color=new_color, size=new_size)
         merged.on_ground = True
