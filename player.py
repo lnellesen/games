@@ -106,7 +106,7 @@ class Player(pygame.sprite.Sprite):
                     break
             if overlapped:
                 # moves player to the top of the other overlapping player
-                sprite.rect.bottom = overlapped.rect.top
+                overlapped.rect.bottom = sprite.rect.top
             else:
                 break
 
@@ -128,8 +128,6 @@ class Player(pygame.sprite.Sprite):
                     if not below:
                         sprite.on_ground = False
                         sprite.falling = True
-            else:
-                sprite.falling = True
 
 
     def merge_with(self, other):
