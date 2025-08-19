@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         for sprite in self.game.players:
             if sprite.on_ground:
-                if sprite. rect.bottom < self.game.screen_height:
+                if sprite.rect.bottom < self.game.screen_height:
                     # check if a player is directly below
                     below =[
                         other for other in self.game.players if other is not sprite
@@ -170,7 +170,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.file) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.x + (self.height - new_size) / 2
+        new_x = other.rect.x + (self.width - new_size) / 2
         new_y = other.rect.y + (self.height - new_size)
 
         merged = Player(self.game, new_x, new_y, file=new_color, size=new_size)

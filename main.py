@@ -17,7 +17,7 @@ class Game:
         self.screen_width = self.window.get_width()
 
         self.player_forms = {'red': 64, 'yellow': 60, 'green': 56, 'orange': 52, 'blue': 48,
-                             'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'darkblue': 28}
+                             'pink': 44, 'gray': 40, 'salmon': 36, 'purple': 32, 'lightblue': 28}
 
         self.players = pygame.sprite.Group()
 
