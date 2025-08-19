@@ -1,6 +1,8 @@
 """Fruit size configurator."""
 import numpy as np
 from skimage.transform import resize
+from skimage import color
+from skimage.filters import threshold_otsu
 import matplotlib.pyplot as plt
 import pygame
 
@@ -17,13 +19,17 @@ LIST_PLAYERS = ["watermelone_upgrade.jpeg",
 
 def reshape_player(file: str):
     im = plt.imread(file)
-    res = resize(im, (im.shape[0]*0.8, im.shape[1]*0.8))#, anti_aliasing=True)
-    plt.imsave('resized_image' + file[:-5] + '.jpg', (res * 255).astype(np.uint8))
+    resized = resize(im, (im.shape[0]*0.8, im.shape[1]*0.8))
+    gray_image = color.rgb2gray(resized)
+    mask = gray_image >0.91
+    resized[mask] = [0.098,0.098,0.098]
+    plt.imsave('resized_image' + file[:-5] + '.jpg', (resized * 255).astype(np.uint8))
     return pygame.image.load('resized_image' + file[:-5] + '.jpg')
 
 
-# for file in LIST_PLAYERS:
-#     resized_image = reshape_player(file)
-#     plt.imsave('resized_image'+file[:-5]+'.jpg', (resized_image * 255).astype(np.uint8))
-#     #plt.show()
+for file in LIST_PLAYERS:
+     resized_image = reshape_player(file)
+     #plt.imsave('resized_image'+file[:-5]+'.jpg', (resized_image * 255).astype(np.uint8))
+
+     #plt.show()
 
