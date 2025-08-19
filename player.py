@@ -80,9 +80,8 @@ class Player(pygame.sprite.Sprite):
                 if vertical_touch and horizontal_overlap:
                     result.append(other)
             return result
-        # print([(sprite.file, sprite.rect.size) for sprite in self.game.players])
         collided = vertically_touching_or_colliding(self, self.game.players)
-        # collided = pygame.sprite.spritecollide(self, self.game.players, False)
+        # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows
         for other in collided:
             if other.rect is self.rect:
                 continue
@@ -93,6 +92,27 @@ class Player(pygame.sprite.Sprite):
                     if sprite.file == self.file:
                         sprite.check_chain_merge()
                 return
+
+    def apply_gravity(self):
+        for sprite in self.game.players:
+            if sprite.on_ground:
+                if sprite. rect.bottom < self.game.screen_height:
+                    # check if a player is directly below
+                    below =[
+                        other for other in self.game.players if other is not sprite
+                        and sprite.rect.bottom == other.rect.top
+                        and sprite.rect.right > other.rect.left
+                        and sprite.rect.left < other.rect.right
+                    ]
+                    if below:
+                        sprite.on_ground = True
+                        sprite.falling = False
+                    if not below:
+                        sprite.on_ground = False
+                        sprite.falling = True
+            else:
+                sprite.falling = True
+
 
     def merge_with(self, other):
         form_keys = list(self.game.player_forms.keys())
@@ -107,5 +127,5 @@ class Player(pygame.sprite.Sprite):
         merged = Player(self.game, new_x, new_y, file=new_color, size=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
-        print([(sprite.file, sprite.rect.size) for sprite in self.game.players])
         merged.check_chain_merge()
+        self.apply_gravity()
