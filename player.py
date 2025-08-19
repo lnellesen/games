@@ -146,7 +146,7 @@ class Player(pygame.sprite.Sprite):
                             other.rect.x -= push
                     else:
                         # vertical overlap -> vertical movement
-                        if dy < 0:  # nur nach oben
+                        if dy < 0:
                             other.rect.y -= push
 
                     # window edges
@@ -157,7 +157,7 @@ class Player(pygame.sprite.Sprite):
                     if other.rect.top < 0:
                         other.rect.top = 0
 
-                    # acheck neighbors or neighbors
+                    # check neighbors or neighbors
                     to_check.append(other)
                     visited.add(other)
 
