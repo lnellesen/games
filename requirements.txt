@@ -1,4 +1,4 @@
-
+# not all requirements are mentioned (e.g. numpy if the first causing a ModuleNotFoundError while running main.py)
 pygame==2.6.1
 ruff==0.12.1
 mypy==1.16.1
