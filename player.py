@@ -4,21 +4,24 @@ import sys
 
 from fruits import LIST_PLAYERS, remodel_player
 
+# you're missing types on function/method definitions. I marked that with "type(s)"
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, x=300, y=32, fruits=random.choice(LIST_PLAYERS), size=64):
+    def __init__(self, game, x=300, y=32, fruits=random.choice(LIST_PLAYERS), size=64):  # constants and types
         super().__init__()
+        # type hint here so that mypy can better show issues
         self.game = game
         self.fruits = fruits
         self.height = size
         self.width = size
-        self.image = remodel_player(self.fruits)
+        self.image = remodel_player(self.fruits)  # reshape_player and remodel_player only take a string?
         self.surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.fall_velocity = 300 # fall velocity
         self.on_ground = False # check if player is on the ground
         self.falling = False
+        # can some of the attributes be protected? (name starts wit an underscore?)
 
 
     def update(self):
@@ -28,75 +31,89 @@ class Player(pygame.sprite.Sprite):
         # Horizontal movement
         if not self.on_ground and not self.falling:
             if keys[pygame.K_RIGHT]:
-                self.rect.x += 150 * self.game.delta_time
+                self.rect.x += 150 * self.game.delta_time  # what is 150? -> consent
                 if self.rect.right > self.game.screen_width:
                     self.rect.right = self.game.screen_width
             elif keys[pygame.K_LEFT]:
-                self.rect.x -= 150 * self.game.delta_time
+                self.rect.x -= 150 * self.game.delta_time  # what is 150? -> consent
                 if self.rect.left < 0:
                     self.rect.left = 0
 
         # Start falling
-        if keys[pygame.K_DOWN] and not self.on_ground and not self.falling:
-            self.falling = True
+        self.falling = (
+            keys[pygame.K_DOWN]
+            and not self.on_ground
+            and not self.falling
+        )
 
-        # Falling
-        if not self.on_ground and self.falling:
-            self.rect.y += self.fall_velocity * self.game.delta_time
+        # you reduce indentations here
+        if not (not self.on_ground and self.falling):
+            return
 
-            colliding = pygame.sprite.spritecollide(self, self.game.players, False)
-            for other in colliding:
-                if other is self:
-                    continue
-                # Only handle if falling on top
-                if self.rect.bottom <= other.rect.top + 5:
-                    self.handle_collision(other)
+        # While falling
+        self.rect.y += self.fall_velocity * self.game.delta_time
 
-            # Collision with the ground
-            if self.rect.bottom >= self.game.screen_height:
-                self.rect.bottom = self.game.screen_height
-                self.on_ground = True
-                self.falling = False
+        colliding = pygame.sprite.spritecollide(self, self.game.players, False)
+        for other in colliding:
+            if other is self:
+                continue
+            # Only handle if falling on top
+            if self.rect.bottom <= other.rect.top + 5:  # what's 5? -> constant
+                self.handle_collision(other)
 
-            self.apply_gravity()
+        # Collision with the ground
+        if self.rect.bottom >= self.game.screen_height:
+            self.rect.bottom = self.game.screen_height
+            self.on_ground = True
+            self.falling = False
 
+        self.apply_gravity()
 
+    def handle_collision(self, other):  # types
+        """Check if a collision results in a merge or not."""
+        form_keys = list(self.game.player_forms.keys()) # this is LIST_PLAYERS, right? Why not use it?
 
-    def handle_collision(self, other):
-        """Check if a colision results in a merge or not."""
-        form_keys = list(self.game.player_forms.keys())
-
-        if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:
+        if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:  # index takes a value not a list...
             self.merge_with(other)
-            # in case same fruits are the are merged again
+            # in case same fruits are merged again
             self.check_chain_merge()
         else:
             # stop falling on top of another player
             self.rect.bottom = other.rect.top
+            # This you do quite often. Maybe introduce a dedicated method `self.stop_falling()`
             self.on_ground = True
             self.falling = False
 
     def check_chain_merge(self):
         """Check if multiple merges need to happen consecutively."""
-        def touching_or_colliding(sprite, group):
+
+        def touching_or_colliding(sprite, group):  # types
             """Check if the players are touching or colliding."""
             result = []
-            for other in group:
+            for other in group:  # you use the name "other"  also in `check_chain_merge` directly, this can have side effects, please rename
                 if other is sprite:
                     continue
                 if sprite.rect.colliderect(other.rect):
                     result.append(other)
                     continue
-                vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
-                horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
-                horizontal_touch =  sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
-                vertical_overlap = sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
-                if (vertical_touch and horizontal_overlap) or (horizontal_touch and vertical_overlap):
+
+                # no extra variables needed, add a comment to describe
+                # vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
+                # horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
+                # horizontal_touch =  sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
+                # vertical_overlap = sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
+                if (
+                    sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
+                    and sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
+                ) or (
+                    sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
+                    and sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
+                ):
                     result.append(other)
             return result
 
         collided = touching_or_colliding(self, self.game.players)
-        # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows
+        # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows  # remove?
         for other in collided:
             if other.rect is self.rect:
                 continue
@@ -105,7 +122,7 @@ class Player(pygame.sprite.Sprite):
                 # recursively check the new merged block
                 for sprite in self.game.players:
                     if sprite.fruits == self.fruits:
-                        sprite.check_chain_merge()
+                        sprite.check_chain_merge()  # why is the variable called `sprite`? `check_chain_merge` is a player method
                 return
 
 
@@ -114,26 +131,30 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.game.players:
             if sprite.on_ground:
                 if sprite.rect.bottom < self.game.screen_height:
+                    # very nested, try to avoid with methods we have shown to you
                     # check if a player is directly below
                     below =[
-                        other for other in self.game.players if other is not sprite
-                        and sprite.rect.bottom == other.rect.top
-                        and sprite.rect.right > other.rect.left
-                        and sprite.rect.left < other.rect.right
+                        other
+                        for other in self.game.players
+                        if (
+                            other is not sprite
+                            and sprite.rect.bottom == other.rect.top
+                            and sprite.rect.right > other.rect.left
+                            and sprite.rect.left < other.rect.right
+                        )
                     ]
                     if below:
                         sprite.on_ground = True
                         sprite.falling = False
-                    if not below:
+                    else:
                         sprite.on_ground = False
                         sprite.falling = True
 
 
-    def explode_cluster(self, center_sprite, push=10):
-        """Move players if a new player after a colision needs more space."""
-    def explode_cluster(self, center_sprite, push=30):
+    def explode_cluster(self, center_sprite, push=30): # type on `center_sprite`, 30 -> constant
+        """Move players if a new player after a collision needs more space."""
         visited = set()
-        to_check = [center_sprite]
+        to_check = [center_sprite]  # is there a better domain related name than `sprite`? based on your docstring it seems to be a player...
 
         while to_check:
             sprite = to_check.pop()
@@ -175,7 +196,7 @@ class Player(pygame.sprite.Sprite):
                     other.rect.x += move_x
                     other.rect.y += move_y
 
-                    # window edges
+                    # stop on window edges?
                     if other.rect.left < 0:
                         other.rect.left = 0
                     if other.rect.right > self.game.screen_width:
@@ -200,12 +221,12 @@ class Player(pygame.sprite.Sprite):
 
 
 
-    def merge_with(self, other):
+    def merge_with(self, other):  # type
         """Merge two players."""
         form_keys = list(self.game.player_forms.keys())
         self.kill()
         other.kill()
-        new_color = form_keys[form_keys.index(self.fruits) - 1]
+        new_color = form_keys[form_keys.index(self.fruits) - 1]  # index doesn't take list?  If you have Fruit as a class, this could improve your usage here `fruit.upgrade()` (but not necessary)
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.x + (self.rect.width - new_size) / 2
@@ -217,12 +238,12 @@ class Player(pygame.sprite.Sprite):
         self.explode_cluster(merged)
         merged.check_chain_merge()
         self.apply_gravity()
-        merged.winning()
-        merged.game_over(other)
+        merged.winning()  #  merged.check_if_won()
+        merged.game_over(other)  #  merged.check_if_game_over()
 
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.player_forms.keys())  # check comments before on same code
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         if new_color == LIST_PLAYERS[8]:
             pygame.init()
@@ -232,14 +253,15 @@ class Player(pygame.sprite.Sprite):
             pygame.display.flip()
             pygame.time.delay(1000)
             pygame.quit()
-            sys.exit()
+            sys.exit()  # game stops directly, no other try?
 
 
     def game_over(self, other):
         """Notify if the max height was reached and the game is lost."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.player_forms.keys())  # check comments before on same code
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         new_size = self.game.player_forms[new_color]
+        # above could be also improved with Fruit class
         new_y = other.rect.y + (self.height - new_size)
         if new_y <= 100 or other.rect.y <= 100:
             pygame.init()
@@ -249,4 +271,4 @@ class Player(pygame.sprite.Sprite):
             pygame.display.flip()
             pygame.time.delay(1000)
             pygame.quit()
-            sys.exit()
+            sys.exit()  # game stops directly, no other try?

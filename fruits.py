@@ -1,3 +1,4 @@
+# module name is usually singular
 """Fruit size configurator."""
 import numpy as np  # missing requirement
 from skimage.transform import resize  # missing requirement

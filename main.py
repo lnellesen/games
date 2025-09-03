@@ -90,4 +90,5 @@ class Game:
         # new_player = player.Player(self, 300, 32, fruit=fruit, size=size)
         self.players.add(new_player)  # new_player seems to have an unexpected type. Pycharm highlights `new_player`
 
+# "if __name__ == '__main__':" is missing
 game = Game()
