@@ -3,7 +3,7 @@
 import pygame
 import player
 import random
-from fruits import LIST_PLAYERS
+from player_configuration import LIST_PLAYER_FILES
 
 
 class Game:
@@ -23,16 +23,16 @@ class Game:
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
         self.player_forms = {
-            LIST_PLAYERS[0]: 278,
-            LIST_PLAYERS[1]: 272,
-            LIST_PLAYERS[2]: 241,
-            LIST_PLAYERS[3]: 234,
-            LIST_PLAYERS[4]: 210,
-            LIST_PLAYERS[5]: 173,
-            LIST_PLAYERS[6]: 149,
-            LIST_PLAYERS[7]: 126,
-            LIST_PLAYERS[8]: 109,
-            LIST_PLAYERS[9]: 79,
+            LIST_PLAYER_FILES[0]: 278,
+            LIST_PLAYER_FILES[1]: 272,
+            LIST_PLAYER_FILES[2]: 241,
+            LIST_PLAYER_FILES[3]: 234,
+            LIST_PLAYER_FILES[4]: 210,
+            LIST_PLAYER_FILES[5]: 173,
+            LIST_PLAYER_FILES[6]: 149,
+            LIST_PLAYER_FILES[7]: 126,
+            LIST_PLAYER_FILES[8]: 109,
+            LIST_PLAYER_FILES[9]: 79,
         }
 
         self.players = pygame.sprite.Group()

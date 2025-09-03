@@ -2,12 +2,12 @@ import pygame
 import random
 import sys
 
-from fruits import LIST_PLAYERS, remodel_player
+from player_configuration import remodel_player, LIST_PLAYER_FILES
 
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, x=300, y=32, fruit=random.choice(LIST_PLAYERS), size=64):
+    def __init__(self, game, x=300, y=32, fruit=random.choice(LIST_PLAYER_FILES), size=64):
         super().__init__()
         self.game = game
         self.fruit = fruit
@@ -194,7 +194,7 @@ class Player(pygame.sprite.Sprite):
         """Notify if the last fruit was created and the game is won."""
         form_keys = list(self.game.player_forms.keys())
         new_color = form_keys[form_keys.index(self.fruit) - 1]
-        if new_color == LIST_PLAYERS[8]:
+        if new_color == LIST_PLAYER_FILES[8]:
             pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("YOU WON!", True, (255, 255, 255))

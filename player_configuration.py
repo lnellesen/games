@@ -1,11 +1,11 @@
-"""Fruit size configurator."""
+"""Player loading and size configurator that are needed bevor the init of the class PLayer."""
 import numpy as np
 from skimage.transform import resize
 from skimage import color
 import matplotlib.pyplot as plt
 import pygame
 
-LIST_PLAYERS = ["watermelone_upgrade.jpeg",
+LIST_PLAYER_FILES = ["watermelone_upgrade.jpeg",
                 "dragonfruit_upgrade.jpeg",
                 "orange_upgrade.jpeg",
                 "apple_upgrade.jpeg",
@@ -15,7 +15,10 @@ LIST_PLAYERS = ["watermelone_upgrade.jpeg",
                 "cherry_upgrade.jpeg",
                 "raspberry_upgrade.jpeg",
                 "blueberry_upgrade.jpeg"]
-
+SCALE_FACTOR = 0.6
+GRAY_FILTER = 0.95
+COLOR_MASK = [0.098,0.098,0.098]
+FILENAME_CUTOFF = -5
 
 def resize_player(image:np.array)->np.array:
     """
@@ -23,7 +26,7 @@ def resize_player(image:np.array)->np.array:
     :param image: the image to resize
     :return:resized image
     """
-    return resize(image, (image.shape[0]*0.6, image.shape[1]*0.6))
+    return resize(image, (image.shape[0]*SCALE_FACTOR, image.shape[1]*SCALE_FACTOR))
 
 
 def recolor_player(image:np.array)->np.array:
@@ -33,22 +36,22 @@ def recolor_player(image:np.array)->np.array:
     :return:recolored fruit image
     """
     gray_image = color.rgb2gray(image)
-    mask = gray_image >0.95
-    image[mask] = [0.098,0.098,0.098]
+    mask = gray_image > GRAY_FILTER
+    image[mask] = COLOR_MASK
     return image
 
 
-def remodel_player(fruit: str)-> pygame.Surface:
+def remodel_player(player: str)-> pygame.Surface:
     """
     Remodel the fruit player.
-    :param fruit: the file name of the fruit image
+    :param player: the file name of the fruit image
     :return:resized and recolored fruit image
     """
-    im = plt.imread(fruit)
-    resized = resize_player(im)
-    im_color = recolor_player(resized)
-    plt.imsave('resized_image' + fruit[:-5] + '.jpg', (im_color * 255).astype(np.uint8))
-    return pygame.image.load('resized_image' + fruit[:-5] + '.jpg')
+    image = plt.imread(player)
+    resized_image = resize_player(image)
+    image_color = recolor_player(resized_image)
+    plt.imsave(f"resized_image{player[:FILENAME_CUTOFF]}.jpg", (image_color*255).astype(np.uint8))
+    return pygame.image.load(f"resized_image{player[:FILENAME_CUTOFF]}.jpg")
 
 
 
