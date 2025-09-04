@@ -162,7 +162,7 @@ class Player(pygame.sprite.Sprite):
                                 move_x = push  # push right instead
 
                     else:
-                        # vertical overlap -> vertical movement
+                        # vertical overlap -> vertical movement - strength on explosion should not be too large. otherwise direct neibouring fruits gets pushed over overlaying fruits
                         if dy < 0:
                             move_y -= push * 5
 
@@ -197,6 +197,7 @@ class Player(pygame.sprite.Sprite):
         self.game.players.add(merged)
         self.explode_cluster(merged)
         merged.check_chain_merge()
+        self.explode_cluster(merged)
         self.apply_gravity()
         merged.winning()
         merged.game_over(other)
