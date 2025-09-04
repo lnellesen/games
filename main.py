@@ -58,8 +58,7 @@ class Game:
             self.players.update()
             self.players.draw(self.window)
 
-            last = self.players.sprites()[-1] # see review
-            if last.on_ground:
+            if all(p.on_ground for p in self.players):
                 self.add_new_player()
 
 

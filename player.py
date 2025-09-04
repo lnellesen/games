@@ -68,8 +68,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:
             self.merge_with(other)
-            # in case same fruits are the are merged again
-            # self.check_chain_merge()
+
         else:
             # stop falling on top of another player
             self.rect.bottom = other.rect.top
