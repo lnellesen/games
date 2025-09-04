@@ -7,27 +7,28 @@ from fruits import LIST_PLAYERS, reshape_player
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, x=300, y=32, fruits=random.choice(LIST_PLAYERS), size=64):
+    def __init__(self, game, X=300, Y=32, fruits=random.choice(LIST_PLAYERS), SIZE=64):
         super().__init__()
         self.game = game
         self.fruits = fruits
-        self.height = size
-        self.width = size
+        self.height = SIZE
+        self.width = SIZE
         self.image = reshape_player(self.fruits)
         self.surface = game.window
-        self.rect = self.image.get_rect(topleft=(x, y))
-        self.fall_velocity = 300 # fall velocity
-        self.on_ground = False # check if player is on the ground
+        self.rect = self.image.get_rect(topleft=(X, Y))
+        self.FALL_VELOCITY = 300
+        self.on_ground = False
         self.falling = False
 
 
     def update(self):
+        """Check the positions of the player to move them."""
         keys = pygame.key.get_pressed()
 
         # Horizontal movement
         if not self.on_ground and not self.falling:
             if keys[pygame.K_RIGHT]:
-                self.rect.x += 150 * self.game.delta_time
+                self.rect.x += 150 * self.game.delta_time # 150 detetermines how fast a player moves horizontally. consant should be somewhere else (?)
                 if self.rect.right > self.game.screen_width:
                     self.rect.right = self.game.screen_width
             elif keys[pygame.K_LEFT]:
@@ -41,14 +42,14 @@ class Player(pygame.sprite.Sprite):
 
         # Falling
         if not self.on_ground and self.falling:
-            self.rect.y += self.fall_velocity * self.game.delta_time
+            self.rect.y += self.FALL_VELOCITY * self.game.delta_time
 
             colliding = pygame.sprite.spritecollide(self, self.game.players, False)
             for other in colliding:
                 if other is self:
                     continue
                 # Only handle if falling on top
-                if self.rect.bottom <= other.rect.top + 5:
+                if self.rect.bottom >= other.rect.top:
                     self.handle_collision(other)
 
             # Collision with the ground
@@ -62,12 +63,13 @@ class Player(pygame.sprite.Sprite):
 
 
     def handle_collision(self, other):
+        """Check if a collision results in a merge or not."""
         form_keys = list(self.game.player_forms.keys())
 
         if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:
             self.merge_with(other)
             # in case same fruits are the are merged again
-            self.check_chain_merge()
+            # self.check_chain_merge()
         else:
             # stop falling on top of another player
             self.rect.bottom = other.rect.top
@@ -75,20 +77,22 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def check_chain_merge(self):
+        """Check if multiple merges need to happen consecutively."""
         def touching_or_colliding(sprite, group):
+            """Check if the players are touching or colliding."""
             result = []
-            for other in group:
-                if other is sprite:
+            for other_ in group:
+                if other_ is sprite:
                     continue
-                if sprite.rect.colliderect(other.rect):
-                    result.append(other)
+                if sprite.rect.colliderect(other_.rect):
+                    result.append(other_)
                     continue
-                vertical_touch = sprite.rect.bottom == other.rect.top or sprite.rect.top == other.rect.bottom
-                horizontal_overlap = sprite.rect.right > other.rect.left and sprite.rect.left < other.rect.right
-                horizontal_touch =  sprite.rect.right == other.rect.left or sprite.rect.left == other.rect.right
-                vertical_overlap = sprite.rect.bottom > other.rect.top and sprite.rect.top < other.rect.bottom
+                vertical_touch = sprite.rect.bottom == other_.rect.top #or sprite.rect.top == other_.rect.bottom
+                horizontal_overlap = sprite.rect.right > other_.rect.left and sprite.rect.left < other_.rect.right
+                horizontal_touch =  sprite.rect.right == other_.rect.left or sprite.rect.left == other_.rect.right
+                vertical_overlap = sprite.rect.bottom > other_.rect.top and sprite.rect.top < other_.rect.bottom
                 if (vertical_touch and horizontal_overlap) or (horizontal_touch and vertical_overlap):
-                    result.append(other)
+                    result.append(other_)
             return result
 
         collided = touching_or_colliding(self, self.game.players)
@@ -201,9 +205,9 @@ class Player(pygame.sprite.Sprite):
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.x + (self.rect.width - new_size) / 2
-        new_y = other.rect.y + (self.rect.height - new_size)
+        new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
-        merged = Player(self.game, new_x, new_y, fruits=new_color, size=new_size)
+        merged = Player(self.game, new_x, new_y, fruits=new_color, SIZE=new_size)
         merged.on_ground = True
         self.game.players.add(merged)
         self.explode_cluster(merged)

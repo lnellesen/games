@@ -52,7 +52,7 @@ class Game:
     def run(self):
         """Run the game."""
         while self.shall_run():
-            self.delta_time = self.clock.tick(60) / 1000
+            self.delta_time = self.clock.tick(60) / 900
             self.window.fill((255, 255, 255))
 
             self.players.update()
@@ -70,7 +70,7 @@ class Game:
     def add_new_player(self):
         """Add a new player."""
         fruits, size = random.choice(list(self.player_forms.items())[6:])
-        new_player = player.Player(self, 300, 32, fruits=fruits, size=size)
+        new_player = player.Player(self, 300, 32, fruits=fruits, SIZE=size)
         self.players.add(new_player)
 
 if __name__ == "__main__":
