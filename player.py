@@ -141,24 +141,23 @@ class Player(pygame.sprite.Sprite):
                     continue
 
                 if sprite.rect.colliderect(other.rect):
-                    # determines which direction to move
+                    # determines which direction to move - either vertically or horizontally after push
                     dx = other.rect.centerx - center_sprite.rect.centerx
                     dy = other.rect.centery - center_sprite.rect.centery
-
                     # Default movement vector
                     move_x, move_y = 0, 0
 
                     if abs(dx) > abs(dy):
                         # horizontal push
                         if dx > 0:
-                            # Push right, but only if not too close to right edge
-                            if other.rect.right <= self.game.screen_width:
+                            # Push right, but only if not too close to right edge after push
+                            if other.rect.right + push <= self.game.screen_width:
                                 move_x = push
                             else:
                                 move_x = -push
                         else:
                             # Push left, but only if not too close to left edge
-                            if other.rect.left >= 0:
+                            if other.rect.left - push >= 0:
                                 move_x = -push
                             else:
                                 move_x = push  # push right instead
@@ -166,7 +165,7 @@ class Player(pygame.sprite.Sprite):
                     else:
                         # vertical overlap -> vertical movement
                         if dy < 0:
-                            move_y -= push * 10
+                            move_y -= push * 5
 
                     # Apply movement
                     other.rect.x += move_x
@@ -177,19 +176,6 @@ class Player(pygame.sprite.Sprite):
                         other.rect.left = 0
                     if other.rect.right > self.game.screen_width:
                         other.rect.right = self.game.screen_width
-
-                    # # Collision resolution: if overlapping after push, separate
-                    # for more in self.game.players:
-                    #     if more is other or more is center_sprite:
-                    #         continue
-                    #     if other.rect.colliderect(more.rect):
-                    #         # push away slightly
-                    #         if move_x > 0:  # pushed right
-                    #             other.rect.right = more.rect.left
-                    #         elif move_x < 0:  # pushed left
-                    #             other.rect.bottom = more.rect.top
-                    #         elif move_y < 0:  # pushed up
-                    #             other.rect.top = more.rect.bottom
 
                     # check neighbors of neighbors
                     to_check.append(other)
