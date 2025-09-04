@@ -7,17 +7,18 @@ from fruits import LIST_PLAYERS
 
 class Game:
     def __init__(self):
+        """Init of the game class."""
         pygame.init()
-        self.window_width = 800
-        self.window_height = 600
-        self.window = pygame.display.set_mode((self.window_width, self.window_height))
+        self.WINDOW_WIDTH = 800
+        self.WINDOW_HEIGHT = 600
+        self.window = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
+        self._running = True
+        self.delta_time = 1000 # how should this be initilized?
 
-        # list of all players in the game - it gets extended whenever a new player is added
-        self.players = [player.Player(self)]
         self.player_forms = {
             LIST_PLAYERS[0]: 278,
             LIST_PLAYERS[1]: 272,
@@ -33,27 +34,31 @@ class Game:
 
         self.players = pygame.sprite.Group()
 
-        self.add_new_player(first=True)
+        self.add_new_player()
 
         self.run()
 
-    def run(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    running = False
+    def shall_run(self):
+        """Return whether the game should continue running."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self._running  = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self._running  = False
+        return self._running
 
-            
+
+
+    def run(self):
+        """Run the game."""
+        while self.shall_run():
             self.delta_time = self.clock.tick(60) / 1000
             self.window.fill((255, 255, 255))
 
             self.players.update()
             self.players.draw(self.window)
 
-            last = list(self.players)[-1]
+            last = self.players.sprites()[-1] # see review
             if last.on_ground:
                 self.add_new_player()
 
@@ -62,10 +67,11 @@ class Game:
 
     pygame.quit()
 
-    # function to add new player with randomly selected color and size
-    def add_new_player(self, first=False):
+    def add_new_player(self):
+        """Add a new player."""
         fruits, size = random.choice(list(self.player_forms.items())[6:])
-        p = player.Player(self, 300, 32, fruits=fruits, size=size)
-        self.players.add(p)
+        new_player = player.Player(self, 300, 32, fruits=fruits, size=size)
+        self.players.add(new_player)
 
-game = Game()
+if __name__ == "__main__":
+    game = Game()
