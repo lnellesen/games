@@ -99,7 +99,6 @@ class Player(pygame.sprite.Sprite):
             return result
 
         collided = touching_or_colliding(self, self.game.players)
-        # collided = pygame.sprite.spritecollide(self, self.game.players, False) # this for some reason only works on windows
         for other in collided:
             if other.rect is self.rect:
                 continue
