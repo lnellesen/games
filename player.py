@@ -15,7 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.width = SIZE
         self.image = reshape_player(self.fruits)
         self.surface = game.window
-        self.rect = self.image.get_rect(topleft=(X, Y))
+        self.X = X if X > 0 else 0
+        self.rect = self.image.get_rect(topleft=(self.X, Y))
         self.FALL_VELOCITY = 300
         self.on_ground = False
         self.falling = False
@@ -86,7 +87,7 @@ class Player(pygame.sprite.Sprite):
                 if sprite.rect.colliderect(other_.rect):
                     result.append(other_)
                     continue
-                vertical_touch = sprite.rect.bottom == other_.rect.top #or sprite.rect.top == other_.rect.bottom
+                vertical_touch = sprite.rect.bottom == other_.rect.top
                 horizontal_overlap = sprite.rect.right > other_.rect.left and sprite.rect.left < other_.rect.right
                 horizontal_touch =  sprite.rect.right == other_.rect.left or sprite.rect.left == other_.rect.right
                 vertical_overlap = sprite.rect.bottom > other_.rect.top and sprite.rect.top < other_.rect.bottom
@@ -153,13 +154,15 @@ class Player(pygame.sprite.Sprite):
                             if other.rect.right + push <= self.game.screen_width:
                                 move_x = push
                             else:
-                                move_x = -push
+                                other.kill()
+                            #     move_x = -push
                         else:
                             # Push left, but only if not too close to left edge
                             if other.rect.left - push >= 0:
                                 move_x = -push
                             else:
-                                move_x = push  # push right instead
+                                other.kill()
+                            #     move_x = push  # push right instead
 
                     else:
                         # vertical overlap -> vertical movement - strength on explosion should not be too large. otherwise direct neibouring fruits gets pushed over overlaying fruits
@@ -190,6 +193,7 @@ class Player(pygame.sprite.Sprite):
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.x + (self.rect.width - new_size) / 2
+        # new_x = new_x if new_x > 0 else 0
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
         merged = Player(self.game, new_x, new_y, fruits=new_color, SIZE=new_size)
