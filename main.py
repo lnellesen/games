@@ -9,8 +9,13 @@ class Game:
     def __init__(self):
         """Init of the game class."""
         pygame.init()
-        self.WINDOW_WIDTH = 800
+        self.WINDOW_WIDTH = 1000
         self.WINDOW_HEIGHT = 600
+        self.platform_width = self.WINDOW_WIDTH - 300
+        self.platform_height = 20
+        self.platform_x = (self.WINDOW_WIDTH - self.platform_width) // 2
+        self.platform_y = self.WINDOW_HEIGHT - self.platform_height
+        self.platform_rect = pygame.Rect(self.platform_x, self.platform_y, self.platform_width, self.platform_height)
         self.window = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -57,8 +62,9 @@ class Game:
 
             self.players.update()
             self.players.draw(self.window)
+            pygame.draw.rect(self.window, (50, 50, 50), self.platform_rect)
 
-            if all(p.on_ground for p in self.players):
+            if not self.players or all(p.on_ground for p in self.players):
                 self.add_new_player()
 
 

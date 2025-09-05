@@ -15,8 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.width = SIZE
         self.image = reshape_player(self.fruits)
         self.surface = game.window
-        self.X = X if X > 0 else 0
-        self.rect = self.image.get_rect(topleft=(self.X, Y))
+        # self.X = X if X > self.game.platform_x else self.game.platform_x
+        self.rect = self.image.get_rect(topleft=(X, Y))
         self.FALL_VELOCITY = 300
         self.on_ground = False
         self.falling = False
@@ -54,10 +54,13 @@ class Player(pygame.sprite.Sprite):
                     self.handle_collision(other)
 
             # Collision with the ground
-            if self.rect.bottom >= self.game.screen_height:
-                self.rect.bottom = self.game.screen_height
-                self.on_ground = True
-                self.falling = False
+            if self.rect.bottom >= self.game.platform_y:
+                if self.game.platform_x <= self.rect.centerx <= (self.game.WINDOW_WIDTH - self.game.platform_width)/2 + self.game.platform_width:
+                    self.rect.bottom = self.game.platform_y
+                    self.on_ground = True
+                    self.falling = False
+                else:
+                    self.kill()
 
             self.apply_gravity()
 
@@ -112,7 +115,7 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         for sprite in self.game.players:
             if sprite.on_ground:
-                if sprite.rect.bottom < self.game.screen_height:
+                if sprite.rect.bottom < self.game.platform_y:
                     # check if a player is directly below
                     below =[
                         other for other in self.game.players if other is not sprite
@@ -128,22 +131,23 @@ class Player(pygame.sprite.Sprite):
                         sprite.falling = True
 
 
-    def explode_cluster(self, center_sprite, push=30):
+    def explode_cluster(self, center_player, push=30):
+
         visited = set()
-        to_check = [center_sprite]
+        to_check = [center_player]
 
         while to_check:
             sprite = to_check.pop()
             visited.add(sprite)
 
             for other in list(self.game.players):
-                if other is center_sprite or other in visited:
+                if other is center_player or other in visited:
                     continue
 
                 if sprite.rect.colliderect(other.rect):
                     # determines which direction to move - either vertically or horizontally after push
-                    dx = other.rect.centerx - center_sprite.rect.centerx
-                    dy = other.rect.centery - center_sprite.rect.centery
+                    dx = other.rect.centerx - center_player.rect.centerx
+                    dy = other.rect.centery - center_player.rect.centery
                     # Default movement vector
                     move_x, move_y = 0, 0
 
@@ -151,18 +155,16 @@ class Player(pygame.sprite.Sprite):
                         # horizontal push
                         if dx > 0:
                             # Push right, but only if not too close to right edge after push
-                            if other.rect.right + push <= self.game.screen_width:
+                            if other.rect.right + push <= (self.game.WINDOW_WIDTH - self.game.platform_width)/2 + self.game.platform_width:
                                 move_x = push
                             else:
                                 other.kill()
-                            #     move_x = -push
                         else:
                             # Push left, but only if not too close to left edge
-                            if other.rect.left - push >= 0:
+                            if other.rect.left - push >= (self.game.WINDOW_WIDTH - self.game.platform_width)/2:
                                 move_x = -push
                             else:
                                 other.kill()
-                            #     move_x = push  # push right instead
 
                     else:
                         # vertical overlap -> vertical movement - strength on explosion should not be too large. otherwise direct neibouring fruits gets pushed over overlaying fruits
