@@ -197,7 +197,10 @@ class Player(pygame.sprite.Sprite):
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
         merged = Player(self.game, new_x, new_y, fruits=new_color, SIZE=new_size)
+        level = form_keys.index(self.fruits)
         merged.on_ground = True
+        points = len(form_keys) - level
+        self.game.score += points
         self.game.players.add(merged)
         self.explode_cluster(merged)
         merged.check_chain_merge()
@@ -210,14 +213,24 @@ class Player(pygame.sprite.Sprite):
         form_keys = list(self.game.player_forms.keys())
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         if new_color == LIST_PLAYERS[8]:
-            pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("YOU WON!", True, (255, 255, 255))
             self.surface.blit(text, (300, 250))
+            font_score = pygame.font.Font(None, 48)
+            score_text = font_score.render(f"Final Score: {self.game.score}", True, (255, 255, 255))
+            self.surface.blit(score_text, (300, 350))
             pygame.display.flip()
-            pygame.time.delay(1000)
-            pygame.quit()
-            sys.exit()
+            # Freeze game, wait for quit or key press
+            waiting = True
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return
+                    if event.type == pygame.KEYDOWN:
+                         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                            pygame.quit()
+                            return
 
 
     def game_over(self, other):
@@ -226,11 +239,21 @@ class Player(pygame.sprite.Sprite):
         new_size = self.game.player_forms[new_color]
         new_y = other.rect.y + (self.height - new_size)
         if new_y <= 100 or other.rect.y <= 100:
-            pygame.init()
             font = pygame.font.Font(None, 74)
             text = font.render("GAME OVER :(", True, (255, 255, 255))
             self.surface.blit(text, (300, 250))
+            font_score = pygame.font.Font(None, 48)
+            score_text = font_score.render(f"Final Score: {self.game.score}", True, (255, 255, 255))
+            self.surface.blit(score_text, (300, 350))
             pygame.display.flip()
-            pygame.time.delay(1000)
-            pygame.quit()
-            sys.exit()
+            # Freeze game, wait for quit or key press
+            waiting = True
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return
+                    if event.type == pygame.KEYDOWN:
+                         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                            pygame.quit()
+                            return

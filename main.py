@@ -16,6 +16,8 @@ class Game:
         self.platform_x = (self.WINDOW_WIDTH - self.platform_width) // 2
         self.platform_y = self.WINDOW_HEIGHT - self.platform_height
         self.platform_rect = pygame.Rect(self.platform_x, self.platform_y, self.platform_width, self.platform_height)
+        self.score = 0
+        self.font = pygame.font.Font(None, 36)
         self.window = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -58,11 +60,13 @@ class Game:
         """Run the game."""
         while self.shall_run():
             self.delta_time = self.clock.tick(60) / 900
-            self.window.fill((255, 255, 255))
+            self.window.fill((25, 25, 25))
 
             self.players.update()
             self.players.draw(self.window)
             pygame.draw.rect(self.window, (50, 50, 50), self.platform_rect)
+            score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+            self.window.blit(score_text, (10, 10))
 
             if not self.players or all(p.on_ground for p in self.players):
                 self.add_new_player()
