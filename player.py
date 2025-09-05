@@ -193,8 +193,7 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         new_size = self.game.player_forms[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.x + (self.rect.width - new_size) / 2
-        # new_x = new_x if new_x > 0 else 0
+        new_x = other.rect.centerx + (self.rect.width - new_size) / 2
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
         merged = Player(self.game, new_x, new_y, fruits=new_color, SIZE=new_size)
