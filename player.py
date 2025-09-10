@@ -1,25 +1,23 @@
 import pygame
 import random
-import sys
 
 from player_configuration import remodel_player, LIST_PLAYER_FILES
 
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, X=300, Y=32, fruits=random.choice(LIST_PLAYER_FILES), SIZE=64):
+    FALL_VELOCITY = 300
+    def __init__(self, game, size, x=500, y=32,  fruits=random.choice(LIST_PLAYER_FILES)):
         super().__init__()
         self.game = game
         self.fruits = fruits
-        self.height = SIZE
-        self.width = SIZE
+        self.height = size
         self.image = remodel_player(self.fruits)
         self.surface = game.window
-        # self.X = X if X > self.game.platform_x else self.game.platform_x
-        self.rect = self.image.get_rect(topleft=(X, Y))
-        self.FALL_VELOCITY = 300
+        self.rect = self.image.get_rect(topleft=(x, y))
         self.on_ground = False
         self.falling = False
+
 
 
     def update(self):
@@ -166,7 +164,8 @@ class Player(pygame.sprite.Sprite):
                                 other.kill()
 
                     else:
-                        # vertical overlap -> vertical movement - strength on explosion should not be too large. otherwise direct neibouring fruits gets pushed over overlaying fruits
+                        # vertical overlap -> vertical movement - strength on explosion should not be too large.
+                        # otherwise direct neibouring fruits gets pushed over overlaying fruits
                         if dy < 0:
                             move_y -= push * 5
 
@@ -197,7 +196,7 @@ class Player(pygame.sprite.Sprite):
         new_x = other.rect.centerx + (self.rect.width - new_size) / 2
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
-        merged = Player(self.game, new_x, new_y, fruits=new_color, SIZE=new_size)
+        merged = Player(self.game, size=new_size,fruits=new_color, x=new_x, y=new_y)
         level = form_keys.index(self.fruits)
         merged.on_ground = True
         points = len(form_keys) - level

@@ -18,7 +18,7 @@ class Game:
     GREY = (25, 25, 25)
     DARK_GREY = (50, 50, 50)
     WHITE = (255, 255, 255)
-    START_X = 300
+    START_X = 500
     START_Y = 32
     APPEARING_PLAYERS = 6
     # The list of player is very constant, if you wish to change the list of files/players, you need to file a complaint
@@ -53,9 +53,6 @@ class Game:
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
         self._running = True
-
-        # list of all players in the game - it gets extended whenever a new player is added
-        self.players = [player.Player(self)]
         self.players = pygame.sprite.Group()
         self.add_new_player()
         self.run()
@@ -95,7 +92,7 @@ class Game:
     def add_new_player(self):
         """Add a new player as a fruit."""
         fruit, size = random.choice(list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS:])
-        new_player = player.Player(self, Game.START_X, Game.START_Y, fruits=fruit, SIZE=size)
+        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruits=fruit)
         self.players.add(new_player) #Todo: should be a sprites
 
 if __name__ == "__main__":
