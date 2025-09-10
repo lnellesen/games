@@ -6,7 +6,6 @@ import random
 from player_configuration import LIST_PLAYER_FILES
 
 
-
 class Game:
     WINDOW_WIDTH = 1000
     WINDOW_HEIGHT = 800
@@ -84,7 +83,6 @@ class Game:
             if not self.players or all(p.on_ground for p in self.players):
                 self.add_new_player()
 
-
             pygame.display.update()
 
     pygame.quit()
@@ -94,6 +92,7 @@ class Game:
         fruit, size = random.choice(list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS:])
         new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruit=fruit)
         self.players.add(new_player) #Todo: should be a sprites
+
 
 if __name__ == "__main__":
     game = Game()

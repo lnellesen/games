@@ -21,6 +21,11 @@ class Player(pygame.sprite.Sprite):
         self._falling = False
 
 
+    def _stop_falling(self):
+        self.on_ground = True
+        self.falling = False
+
+
     def update(self):
         """Check the positions of the player to move them."""
         keys = pygame.key.get_pressed()
@@ -56,8 +61,7 @@ class Player(pygame.sprite.Sprite):
             if self.rect.bottom >= self.game.platform_y:
                 if self.game.platform_x <= self.rect.centerx <= (self.game.WINDOW_WIDTH - self.game.platform_width)/2 + self.game.platform_width:
                     self.rect.bottom = self.game.platform_y
-                    self.on_ground = True
-                    self._falling = False
+                    self._stop_falling()
                 else:
                     self.kill()
 
@@ -74,8 +78,7 @@ class Player(pygame.sprite.Sprite):
         else:
             # stop falling on top of another player
             self.rect.bottom = other.rect.top
-            self.on_ground = True
-            self._falling = False
+            self._stop_falling()
 
     def check_chain_merge(self):
         """Check if multiple merges need to happen consecutively."""
