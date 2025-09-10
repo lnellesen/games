@@ -9,7 +9,7 @@ from player_configuration import LIST_PLAYER_FILES
 
 class Game:
     WINDOW_WIDTH = 1000
-    WINDOW_HEIGHT = 600
+    WINDOW_HEIGHT = 800
     PLATFORM_DELTA = 300
     PLATFORM_HEIGHT = 20
     SCORE_BEGIN = 0
@@ -92,7 +92,7 @@ class Game:
     def add_new_player(self):
         """Add a new player as a fruit."""
         fruit, size = random.choice(list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS:])
-        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruits=fruit)
+        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruit=fruit)
         self.players.add(new_player) #Todo: should be a sprites
 
 if __name__ == "__main__":
