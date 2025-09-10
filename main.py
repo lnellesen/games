@@ -13,7 +13,7 @@ class Game:
         """
         pygame.init()
         self.WINDOW_WIDTH = 1000
-        self.WINDOW_HEIGHT = 600
+        self.WINDOW_HEIGHT = 800
         self.platform_width = self.WINDOW_WIDTH - 300
         self.platform_height = 20
         self.platform_x = (self.WINDOW_WIDTH - self.platform_width) // 2

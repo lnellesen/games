@@ -86,18 +86,18 @@ class Player(pygame.sprite.Sprite):
         def touching_or_colliding(sprite, group):
             """Check if the players are touching or colliding."""
             result = []
-            for other_ in group:
-                if other_ is sprite:
+            for _other in group:
+                if _other is sprite:
                     continue
-                if sprite.rect.colliderect(other_.rect):
-                    result.append(other_)
+                if sprite.rect.colliderect(_other.rect):
+                    result.append(_other)
                     continue
-                vertical_touch = sprite.rect.bottom == other_.rect.top
-                horizontal_overlap = sprite.rect.right > other_.rect.left and sprite.rect.left < other_.rect.right
-                horizontal_touch =  sprite.rect.right == other_.rect.left or sprite.rect.left == other_.rect.right
-                vertical_overlap = sprite.rect.bottom > other_.rect.top and sprite.rect.top < other_.rect.bottom
+                vertical_touch = sprite.rect.bottom == _other.rect.top
+                horizontal_overlap = sprite.rect.right > _other.rect.left and sprite.rect.left < _other.rect.right
+                horizontal_touch =  sprite.rect.right == _other.rect.left or sprite.rect.left == _other.rect.right
+                vertical_overlap = sprite.rect.bottom > _other.rect.top and sprite.rect.top < _other.rect.bottom
                 if (vertical_touch and horizontal_overlap) or (horizontal_touch and vertical_overlap):
-                    result.append(other_)
+                    result.append(_other)
             return result
 
         collided = touching_or_colliding(self, self.game.players)
@@ -177,11 +177,6 @@ class Player(pygame.sprite.Sprite):
                     other.rect.x += move_x
                     other.rect.y += move_y
 
-                    # window edges
-                    if other.rect.left < 0:
-                        other.rect.left = 0
-                    if other.rect.right > self.game.screen_width:
-                        other.rect.right = self.game.screen_width
 
                     # check neighbors of neighbors
                     to_check.append(other)
