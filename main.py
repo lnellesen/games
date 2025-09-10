@@ -3,7 +3,7 @@
 import pygame
 import player
 import random
-from fruits import LIST_PLAYERS
+from player_configuration import LIST_PLAYER_FILES
 
 
 class Game:

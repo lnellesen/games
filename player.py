@@ -7,13 +7,13 @@ from player_configuration import remodel_player, LIST_PLAYER_FILES
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
-    def __init__(self, game, X=300, Y=32, fruits=random.choice(LIST_PLAYERS), SIZE=64):
+    def __init__(self, game, X=300, Y=32, fruits=random.choice(LIST_PLAYER_FILES), SIZE=64):
         super().__init__()
         self.game = game
         self.fruits = fruits
         self.height = SIZE
         self.width = SIZE
-        self.image = reshape_player(self.fruits)
+        self.image = remodel_player(self.fruits)
         self.surface = game.window
         # self.X = X if X > self.game.platform_x else self.game.platform_x
         self.rect = self.image.get_rect(topleft=(X, Y))
@@ -130,7 +130,7 @@ class Player(pygame.sprite.Sprite):
                         sprite.falling = True
 
 
-    def explode_cluster(self, center_sprite, push=30):
+    def explode_cluster(self, center_player, push=30):
         """Move players if a new player after a colision needs more space."""
         visited = set()
         to_check = [center_player]
@@ -213,7 +213,7 @@ class Player(pygame.sprite.Sprite):
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
         form_keys = list(self.game.player_forms.keys())
-        new_color = form_keys[form_keys.index(self.fruit) - 1]
+        new_color = form_keys[form_keys.index(self.fruits) - 1]
         if new_color == LIST_PLAYER_FILES[8]:
             pygame.init()
             font = pygame.font.Font(None, 74)
