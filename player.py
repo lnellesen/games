@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 
     def handle_collision(self, other):
         """Check if a collision results in a merge or not."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.PLAYER_FORMS.keys())
 
         if self.fruits == other.fruits and form_keys.index(self.fruits) > 0:
             self.merge_with(other)
@@ -188,11 +188,11 @@ class Player(pygame.sprite.Sprite):
 
     def merge_with(self, other):
         """Merge two players."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.PLAYER_FORMS.keys())
         self.kill()
         other.kill()
         new_color = form_keys[form_keys.index(self.fruits) - 1]
-        new_size = self.game.player_forms[new_color]
+        new_size = self.game.PLAYER_FORMS[new_color]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.centerx + (self.rect.width - new_size) / 2
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
@@ -212,7 +212,7 @@ class Player(pygame.sprite.Sprite):
 
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.PLAYER_FORMS.keys())
         new_color = form_keys[form_keys.index(self.fruits) - 1]
         if new_color == LIST_PLAYER_FILES[8]:
             pygame.init()
@@ -238,9 +238,9 @@ class Player(pygame.sprite.Sprite):
 
     def game_over(self, other):
         """Notify if the max height was reached and the game is lost."""
-        form_keys = list(self.game.player_forms.keys())
+        form_keys = list(self.game.PLAYER_FORMS.keys())
         new_color = form_keys[form_keys.index(self.fruits) - 1]
-        new_size = self.game.player_forms[new_color]
+        new_size = self.game.PLAYER_FORMS[new_color]
         new_y = other.rect.y + (self.height - new_size)
         if new_y <= 100 or other.rect.y <= 100:
             font = pygame.font.Font(None, 74)
