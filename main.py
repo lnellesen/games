@@ -18,7 +18,9 @@ class Game:
         self.platform_height = 20
         self.platform_x = (self.WINDOW_WIDTH - self.platform_width) // 2
         self.platform_y = self.WINDOW_HEIGHT - self.platform_height
-        self.platform_rect = pygame.Rect(self.platform_x, self.platform_y, self.platform_width, self.platform_height)
+        self.platform_rect = pygame.Rect(
+            self.platform_x, self.platform_y, self.platform_width, self.platform_height
+        )
         self.score = 0
         self.font = pygame.font.Font(None, 36)
         self.window = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
@@ -26,9 +28,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.screen_height = self.window.get_height()
         self.screen_width = self.window.get_width()
-        self._running = True
-        self.delta_time = 1000 # how should this be initilized?
-
+        self.running = True
+        self.delta_time = 1000
         # list of all players in the game - it gets extended whenever a new player is added
         self.players = [player.Player(self)]
         self.player_forms = {
@@ -54,12 +55,10 @@ class Game:
         """Return whether the game should continue running."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running  = False
+                self.running = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self._running  = False
-        return self._running
-
-
+                self.running = False
+        return self.running
 
     def run(self):
         """Run the game."""
@@ -76,7 +75,6 @@ class Game:
             if not self.players or all(p.on_ground for p in self.players):
                 self.add_new_player()
 
-
             pygame.display.update()
 
     pygame.quit()
@@ -86,6 +84,7 @@ class Game:
         fruits, size = random.choice(list(self.player_forms.items())[6:])
         new_player = player.Player(self, 300, 32, fruits=fruits, SIZE=size)
         self.players.add(new_player)
+
 
 if __name__ == "__main__":
     game = Game()
