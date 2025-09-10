@@ -12,7 +12,12 @@ class Game:
     PLATFORM_DELTA = 300
     PLATFORM_HEIGHT = 20
     SCORE_BEGIN = 0
-    TEXT_SIZE = 36
+    POSITION_SCORE = (10, 10)
+    POSITION_FINAL_SCORE = (300, 350)
+    POSITION_FINISH = (300, 250)
+    TEXT_SIZE_SCORE = 36
+    TEXT_SIZE_FINAL_SCORE = 48
+    TEXT_SIZE_FINISH = 74
     FRAME_RATE = 900
     GREY = (25, 25, 25)
     DARK_GREY = (50, 50, 50)
@@ -20,6 +25,8 @@ class Game:
     START_X = 500
     START_Y = 32
     APPEARING_PLAYERS = 6
+    GAME_OVER_HIGHT = 100
+    WINNING_PLAYER = 8
     # The list of player is very constant, if you wish to change the list of files/players, you need to file a complaint
     # with the CEOs of Fruit Merge 2.0. Therefore this is hardcoded.
     PLAYER_FORMS = {
@@ -44,7 +51,7 @@ class Game:
         self.platform_y = Game.WINDOW_HEIGHT - Game.PLATFORM_HEIGHT
         self.platform_rect = pygame.Rect(self.platform_x, self.platform_y, self.platform_width, self.PLATFORM_HEIGHT)
         self.score = Game.SCORE_BEGIN
-        self.font = pygame.font.Font(None, Game.TEXT_SIZE)
+        self.font = pygame.font.Font(None, Game.TEXT_SIZE_SCORE)
         self.window = pygame.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
         pygame.display.set_caption("fruit merge")
         self.clock = pygame.time.Clock()
@@ -78,7 +85,7 @@ class Game:
             pygame.draw.rect(self.window, Game.DARK_GREY, self.platform_rect)
             score_text = self.font.render(f"Score: {self.score}", True, Game.WHITE)
             # position of score box
-            self.window.blit(score_text, (10, 10))
+            self.window.blit(score_text, Game.POSITION_SCORE)
 
             if not self.players or all(p.on_ground for p in self.players):
                 self.add_new_player()

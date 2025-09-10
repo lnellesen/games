@@ -215,14 +215,14 @@ class Player(pygame.sprite.Sprite):
         """Notify if the last fruit was created and the game is won."""
         form_keys = LIST_PLAYER_FILES
         new_color = form_keys[form_keys.index(self.fruit) - 1]
-        if new_color == LIST_PLAYER_FILES[8]:
+        if new_color == LIST_PLAYER_FILES[self.game.WINNING_PLAYER]:
             pygame.init()
-            font = pygame.font.Font(None, 74)
-            text = font.render("YOU WON!", True, (255, 255, 255))
-            self._surface.blit(text, (300, 250))
-            font_score = pygame.font.Font(None, 48)
-            score_text = font_score.render(f"Final Score: {self.game.score}", True, (255, 255, 255))
-            self._surface.blit(score_text, (300, 350))
+            font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
+            text = font.render("YOU WON!", True, self.game.WHITE)
+            self._surface.blit(text, self.game.POSITION_FINISH)
+            font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
+            score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
+            self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
             pygame.display.flip()
             # Freeze game, wait for quit or key press
             waiting = True
@@ -243,13 +243,13 @@ class Player(pygame.sprite.Sprite):
         new_color = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.PLAYER_FORMS[new_color]
         new_y = other.rect.y + (self._height - new_size)
-        if new_y <= 100 or other.rect.y <= 100:
-            font = pygame.font.Font(None, 74)
-            text = font.render("GAME OVER :(", True, (255, 255, 255))
-            self._surface.blit(text, (300, 250))
-            font_score = pygame.font.Font(None, 48)
-            score_text = font_score.render(f"Final Score: {self.game.score}", True, (255, 255, 255))
-            self._surface.blit(score_text, (300, 350))
+        if new_y <= self.game.GAME_OVER_HIGHT or other.rect.y <= self.game.GAME_OVER_HIGHT:
+            font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
+            text = font.render("GAME OVER :(", True, self.game.WHITE)
+            self._surface.blit(text, self.game.POSITION_FINISH)
+            font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
+            score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
+            self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
             pygame.display.flip()
             # Freeze game, wait for quit or key press
             waiting = True
