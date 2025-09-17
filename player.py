@@ -225,6 +225,14 @@ class Player(pygame.sprite.Sprite):
             font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
             score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
             self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
+
+            button_rect = pygame.Rect((self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2, self.game.POSITION_FINAL_SCORE[1] + 100, self.game.BUTTON_WIDTH, self.game.BUTTON_HEIGHT)
+            pygame.draw.rect(self._surface, self.game.BUTTON_COLOR, button_rect)
+            button_font = pygame.font.Font(None, self.game.TEXT_SIZE_SCORE)
+            button_text = button_font.render("Replay", True, self.game.WHITE)
+            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (self.game.BUTTON_WIDTH - button_text.get_width()) // 2
+            text_y = self.game.POSITION_FINAL_SCORE[1] + 100 + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            self._surface.blit(button_text, (text_x, text_y))
             pygame.display.flip()
             # Freeze game, wait for quit or key press
             waiting = True
@@ -237,6 +245,13 @@ class Player(pygame.sprite.Sprite):
                          if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                             pygame.quit()
                             return
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if button_rect.collidepoint(event.pos):
+                            waiting = False
+
+            import main
+            pygame.quit()
+            main.Game().run()
 
 
     def game_over(self, other):
@@ -252,6 +267,16 @@ class Player(pygame.sprite.Sprite):
             font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
             score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
             self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
+
+            button_rect = pygame.Rect((self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2, self.game.POSITION_FINAL_SCORE[1] + 100, self.game.BUTTON_WIDTH, self.game.BUTTON_HEIGHT)
+            pygame.draw.rect(self._surface, self.game.BUTTON_COLOR, button_rect)
+            button_font = pygame.font.Font(None, self.game.TEXT_SIZE_SCORE)
+            button_text = button_font.render("Replay", True, self.game.WHITE)
+            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (self.game.BUTTON_WIDTH - button_text.get_width()) // 2
+            text_y = self.game.POSITION_FINAL_SCORE[1] + 100 + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            self._surface.blit(button_text, (text_x, text_y))
+
+
             pygame.display.flip()
             # Freeze game, wait for quit or key press
             waiting = True
@@ -264,3 +289,10 @@ class Player(pygame.sprite.Sprite):
                          if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                             pygame.quit()
                             return
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if button_rect.collidepoint(event.pos):
+                            waiting = False
+
+            import main
+            pygame.quit()
+            main.Game().run()

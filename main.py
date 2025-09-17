@@ -28,6 +28,9 @@ class Game:
     APPEARING_PLAYERS = 6
     GAME_OVER_HIGHT = 100
     WINNING_PLAYER = 9
+    BUTTON_WIDTH = 200
+    BUTTON_HEIGHT = 60
+    BUTTON_COLOR = (0, 128, 0)
     # The list of player is very constant, if you wish to change the list of files/players, you need to file a complaint
     # with the CEOs of Fruit Merge 2.0. Therefore, this is hardcoded.
     PLAYER_FORMS = {
@@ -62,7 +65,7 @@ class Game:
         self._running = True
         self.players = pygame.sprite.Group()
         self.add_new_player()
-        self.run()
+        # self.run()
 
     def shall_run(self):
         """Return whether the game should continue running."""
@@ -104,3 +107,4 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
+    game.run()
