@@ -61,7 +61,7 @@ class Game:
         self._running = True
         self.players = pygame.sprite.Group()
         self.add_new_player()
-        self.run()
+        # self.run()
 
     def shall_run(self):
         """Return whether the game should continue running."""
@@ -103,3 +103,4 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
+    game.run()
