@@ -3,7 +3,6 @@ import numpy as np
 from skimage.transform import resize
 from skimage import color
 import matplotlib.pyplot as plt
-import pygame
 
 LIST_PLAYER_FILES = ["blueberry_upgrade.jpeg",
                     "raspberry_upgrade.jpeg",

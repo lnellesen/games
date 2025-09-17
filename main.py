@@ -4,7 +4,6 @@ import os
 import pygame
 import player
 import random
-from player_configuration import LIST_PLAYER_FILES
 
 LIST_PLAYER_FILES_RESIZED = [file for file in os.listdir('resized_pictures')]
 
