@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
     FALL_VELOCITY = 300
     HORIZONTAL_VELOCITY = 150
-    PUSH = 30
+    PUSH = 20
     def __init__(self, game, size, x=500, y=32,  fruit=random.choice(LIST_PLAYER_FILES)):
         super().__init__()
         self.game = game
