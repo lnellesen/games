@@ -1,4 +1,4 @@
-"""Run/starts game."""
+"""Setup and start of the game."""
 
 import pygame
 import player
@@ -26,9 +26,9 @@ class Game:
     START_Y = 32
     APPEARING_PLAYERS = 6
     GAME_OVER_HIGHT = 100
-    WINNING_PLAYER = 8
+    WINNING_PLAYER = 0
     # The list of player is very constant, if you wish to change the list of files/players, you need to file a complaint
-    # with the CEOs of Fruit Merge 2.0. Therefore this is hardcoded.
+    # with the CEOs of Fruit Merge 2.0. Therefore, this is hardcoded.
     PLAYER_FORMS = {
         LIST_PLAYER_FILES[0]: 278,
         LIST_PLAYER_FILES[1]: 272,

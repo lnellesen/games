@@ -1,4 +1,4 @@
-"""Player loading and size configurator that are needed bevor the init of the class PLayer."""
+"""Player loading and size configurator that are needed before the init of the class PLayer."""
 import numpy as np
 from skimage.transform import resize
 from skimage import color
@@ -47,11 +47,11 @@ def remodel_player(player: str)-> pygame.Surface:
     :param player: the file name of the fruit image
     :return:resized and recolored fruit image
     """
-    image = plt.imread(player)
+    image = plt.imread(fr"original_pictures\{player}")
     resized_image = resize_player(image)
     image_color = recolor_player(resized_image)
-    plt.imsave(f"resized_image{player[:FILENAME_CUTOFF]}.jpg", (image_color*255).astype(np.uint8))
-    return pygame.image.load(f"resized_image{player[:FILENAME_CUTOFF]}.jpg")
+    plt.imsave(fr"resized_pictures\resized_image{player[:FILENAME_CUTOFF]}.jpg", (image_color*255).astype(np.uint8))
+    return pygame.image.load(fr"resized_pictures\resized_image{player[:FILENAME_CUTOFF]}.jpg")
 
 
 
