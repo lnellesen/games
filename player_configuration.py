@@ -43,7 +43,7 @@ def recolor_player(image:np.array)->np.array:
 
 def remodel_player(player: str):
     """
-    Remodel ans save the fruit player.
+    Remodel and save the fruit player.
     :param player: the file name of the fruit image
     """
     image = plt.imread(fr"original_pictures\{player}")
