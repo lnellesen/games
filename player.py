@@ -214,7 +214,7 @@ class Player(pygame.sprite.Sprite):
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
         form_keys = LIST_PLAYER_FILES
-        new_color = form_keys[form_keys.index(self.fruit) - 1]
+        new_color = form_keys[form_keys.index(self.fruit)]
         if new_color == LIST_PLAYER_FILES[self.game.WINNING_PLAYER]:
             pygame.init()
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
