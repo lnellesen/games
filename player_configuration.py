@@ -5,16 +5,17 @@ from skimage import color
 import matplotlib.pyplot as plt
 import pygame
 
-LIST_PLAYER_FILES = ["watermelone_upgrade.jpeg",
-                "dragonfruit_upgrade.jpeg",
-                "orange_upgrade.jpeg",
-                "apple_upgrade.jpeg",
-                "lemon_upgrade.jpeg",
-                "kiwi_upgrade.jpeg",
-                "strawberry_upgrade.jpeg",
-                "cherry_upgrade.jpeg",
-                "raspberry_upgrade.jpeg",
-                "blueberry_upgrade.jpeg"]
+LIST_PLAYER_FILES = ["blueberry_upgrade.jpeg",
+                    "raspberry_upgrade.jpeg",
+                    "cherry_upgrade.jpeg",
+                    "strawberry_upgrade.jpeg",
+                    "kiwi_upgrade.jpeg",
+                    "lemon_upgrade.jpeg",
+                    "apple_upgrade.jpeg",
+                    "orange_upgrade.jpeg",
+                    "dragonfruit_upgrade.jpeg",
+                    "watermelone_upgrade.jpeg",
+                ]
 SCALE_FACTOR = 0.6
 GRAY_FILTER = 0.95
 COLOR_MASK = [0.098,0.098,0.098]
@@ -41,17 +42,20 @@ def recolor_player(image:np.array)->np.array:
     return image
 
 
-def remodel_player(player: str)-> pygame.Surface:
+def remodel_player(player: str):
     """
-    Remodel the fruit player.
+    Remodel ans save the fruit player.
     :param player: the file name of the fruit image
-    :return:resized and recolored fruit image
     """
     image = plt.imread(fr"original_pictures\{player}")
     resized_image = resize_player(image)
     image_color = recolor_player(resized_image)
-    plt.imsave(fr"resized_pictures\resized_image{player[:FILENAME_CUTOFF]}.jpg", (image_color*255).astype(np.uint8))
-    return pygame.image.load(fr"resized_pictures\resized_image{player[:FILENAME_CUTOFF]}.jpg")
+    plt.imsave(fr"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg", (image_color*255).astype(np.uint8))
+    return
+
+if __name__ == "__main__":
+    for player in LIST_PLAYER_FILES:
+        remodel_player(player)
 
 
 

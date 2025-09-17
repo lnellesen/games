@@ -1,7 +1,9 @@
+import os
+
 import pygame
 import random
 
-from player_configuration import remodel_player, LIST_PLAYER_FILES
+from main import LIST_PLAYER_FILES_RESIZED
 
 
 class Player(pygame.sprite.Sprite):
@@ -9,12 +11,12 @@ class Player(pygame.sprite.Sprite):
     FALL_VELOCITY = 300
     HORIZONTAL_VELOCITY = 150
     PUSH = 20
-    def __init__(self, game, size, x=500, y=32,  fruit=random.choice(LIST_PLAYER_FILES)):
+    def __init__(self, game, size, x=500, y=32,  fruit=random.choice(LIST_PLAYER_FILES_RESIZED)):
         super().__init__()
         self.game = game
         self.fruit = fruit
         self._height = size
-        self.image = remodel_player(self.fruit)
+        self.image = pygame.image.load(os.path.join('resized_pictures', self.fruit))
         self._surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.on_ground = False
@@ -71,9 +73,9 @@ class Player(pygame.sprite.Sprite):
 
     def handle_collision(self, other):
         """Check if a collision results in a merge or not."""
-        form_keys = LIST_PLAYER_FILES
-        # form_keys.index(self.fruit) > 0: watermelons are the largest fruit and can not merge
-        if self.fruit == other.fruit and form_keys.index(self.fruit) > 0:
+        form_keys = LIST_PLAYER_FILES_RESIZED
+        # form_keys.index(self.fruit) < 9: watermelons are the largest fruit and can not merge
+        if self.fruit == other.fruit and form_keys.index(self.fruit) < 9:
             self.merge_with(other)
         else:
             # stop falling on top of another player
@@ -189,10 +191,10 @@ class Player(pygame.sprite.Sprite):
 
     def merge_with(self, other):
         """Merge two players."""
-        form_keys = LIST_PLAYER_FILES
+        form_keys = LIST_PLAYER_FILES_RESIZED
         self.kill()
         other.kill()
-        new_player = form_keys[form_keys.index(self.fruit) - 1]
+        new_player = form_keys[form_keys.index(self.fruit) + 1]
         new_size = self.game.PLAYER_FORMS[new_player]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.centerx + (self.rect.width - new_size) / 2
@@ -213,9 +215,9 @@ class Player(pygame.sprite.Sprite):
 
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
-        form_keys = LIST_PLAYER_FILES
+        form_keys = LIST_PLAYER_FILES_RESIZED
         new_player = form_keys[form_keys.index(self.fruit)]
-        if new_player == LIST_PLAYER_FILES[self.game.WINNING_PLAYER]:
+        if new_player == LIST_PLAYER_FILES_RESIZED[self.game.WINNING_PLAYER]:
             pygame.init()
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
             text = font.render("YOU WON!", True, self.game.WHITE)
@@ -239,7 +241,7 @@ class Player(pygame.sprite.Sprite):
 
     def game_over(self, other):
         """Notify if the max height was reached and the game is lost."""
-        form_keys = LIST_PLAYER_FILES
+        form_keys = LIST_PLAYER_FILES_RESIZED
         new_player = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.PLAYER_FORMS[new_player]
         new_y = other.rect.y + (self._height - new_size)

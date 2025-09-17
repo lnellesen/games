@@ -1,10 +1,12 @@
 """Setup and start of the game."""
+import os
 
 import pygame
 import player
 import random
 from player_configuration import LIST_PLAYER_FILES
 
+LIST_PLAYER_FILES_RESIZED = [file for file in os.listdir('resized_pictures')]
 
 class Game:
     WINDOW_WIDTH = 1000
@@ -26,20 +28,20 @@ class Game:
     START_Y = 32
     APPEARING_PLAYERS = 6
     GAME_OVER_HIGHT = 100
-    WINNING_PLAYER = 0
+    WINNING_PLAYER = 9
     # The list of player is very constant, if you wish to change the list of files/players, you need to file a complaint
     # with the CEOs of Fruit Merge 2.0. Therefore, this is hardcoded.
     PLAYER_FORMS = {
-        LIST_PLAYER_FILES[0]: 278,
-        LIST_PLAYER_FILES[1]: 272,
-        LIST_PLAYER_FILES[2]: 241,
-        LIST_PLAYER_FILES[3]: 234,
-        LIST_PLAYER_FILES[4]: 210,
-        LIST_PLAYER_FILES[5]: 173,
-        LIST_PLAYER_FILES[6]: 149,
-        LIST_PLAYER_FILES[7]: 126,
-        LIST_PLAYER_FILES[8]: 109,
-        LIST_PLAYER_FILES[9]: 79,
+        LIST_PLAYER_FILES_RESIZED[9]: 278,
+        LIST_PLAYER_FILES_RESIZED[8]: 272,
+        LIST_PLAYER_FILES_RESIZED[7]: 241,
+        LIST_PLAYER_FILES_RESIZED[6]: 234,
+        LIST_PLAYER_FILES_RESIZED[5]: 210,
+        LIST_PLAYER_FILES_RESIZED[4]: 173,
+        LIST_PLAYER_FILES_RESIZED[3]: 149,
+        LIST_PLAYER_FILES_RESIZED[2]: 126,
+        LIST_PLAYER_FILES_RESIZED[1]: 109,
+        LIST_PLAYER_FILES_RESIZED[0]: 79,
     }
     def __init__(self):
         """
