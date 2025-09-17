@@ -192,13 +192,13 @@ class Player(pygame.sprite.Sprite):
         form_keys = LIST_PLAYER_FILES
         self.kill()
         other.kill()
-        new_color = form_keys[form_keys.index(self.fruit) - 1]
-        new_size = self.game.PLAYER_FORMS[new_color]
+        new_player = form_keys[form_keys.index(self.fruit) - 1]
+        new_size = self.game.PLAYER_FORMS[new_player]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.centerx + (self.rect.width - new_size) / 2
         new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
 
-        merged = Player(self.game, size=new_size,fruit=new_color, x=new_x, y=new_y)
+        merged = Player(self.game, size=new_size,fruit=new_player, x=new_x, y=new_y)
         level = form_keys.index(self.fruit)
         merged.on_ground = True
         points = len(form_keys) - level
@@ -214,8 +214,8 @@ class Player(pygame.sprite.Sprite):
     def winning(self):
         """Notify if the last fruit was created and the game is won."""
         form_keys = LIST_PLAYER_FILES
-        new_color = form_keys[form_keys.index(self.fruit)]
-        if new_color == LIST_PLAYER_FILES[self.game.WINNING_PLAYER]:
+        new_player = form_keys[form_keys.index(self.fruit)]
+        if new_player == LIST_PLAYER_FILES[self.game.WINNING_PLAYER]:
             pygame.init()
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
             text = font.render("YOU WON!", True, self.game.WHITE)
@@ -240,8 +240,8 @@ class Player(pygame.sprite.Sprite):
     def game_over(self, other):
         """Notify if the max height was reached and the game is lost."""
         form_keys = LIST_PLAYER_FILES
-        new_color = form_keys[form_keys.index(self.fruit) - 1]
-        new_size = self.game.PLAYER_FORMS[new_color]
+        new_player = form_keys[form_keys.index(self.fruit) - 1]
+        new_size = self.game.PLAYER_FORMS[new_player]
         new_y = other.rect.y + (self._height - new_size)
         if new_y <= self.game.GAME_OVER_HIGHT or other.rect.y <= self.game.GAME_OVER_HIGHT:
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
