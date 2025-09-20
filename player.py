@@ -207,7 +207,7 @@ class Player(pygame.sprite.Sprite):
         merged = Player(self.game, size=new_size,fruit=new_player, x=new_x, y=new_y)
         level = form_keys.index(self.fruit)
         merged.on_ground = True
-        points = len(form_keys) - level
+        points = level + 1
         self.game.score += points
         self.game.players.add(merged)
         self.explode_cluster(merged)
