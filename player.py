@@ -2,8 +2,10 @@ import os
 
 import pygame
 import random
+from pathlib import Path
 
-from main import LIST_PLAYER_FILES_RESIZED
+RESIZED_PICTURES_PATH = Path(__file__).parent / 'resized_pictures'
+LIST_PLAYER_FILES_RESIZED = [file for file in sorted(os.listdir(RESIZED_PICTURES_PATH))]
 
 
 class Player(pygame.sprite.Sprite):
@@ -16,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.fruit = fruit
         self._height = size
-        self.image = pygame.image.load(os.path.join('resized_pictures', self.fruit))
+        self.image = pygame.image.load(os.path.join(RESIZED_PICTURES_PATH, self.fruit))
         self._surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.on_ground = False
@@ -25,8 +27,7 @@ class Player(pygame.sprite.Sprite):
 
     def _stop_falling(self):
         self.on_ground = True
-        self.falling = False
-
+        self._falling = False
 
     def update(self):
         """Check the positions of the player to move them."""
@@ -120,21 +121,24 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         """Check that no player hangs in the air."""
         for _player in self.game.players:
-            if _player.on_ground:
-                if _player.rect.bottom < self.game.platform_y:
-                    # check if a player is directly below
-                    below =[
-                        other for other in self.game.players if other is not _player
-                        and _player.rect.bottom == other.rect.top
-                        and _player.rect.right > other.rect.left
-                        and _player.rect.left < other.rect.right
-                    ]
-                    if below:
-                        _player.on_ground = True
-                        _player._falling = False
-                    if not below:
-                        _player.on_ground = False
-                        _player._falling = True
+            if not _player.on_ground:
+                continue
+
+            if not _player.rect.bottom < self.game.platform_y:
+                continue
+            # check if a player is directly below
+            below =[
+                other for other in self.game.players if other is not _player
+                and _player.rect.bottom == other.rect.top
+                and _player.rect.right > other.rect.left
+                and _player.rect.left < other.rect.right
+            ]
+            if below:
+                _player.on_ground = True
+                _player._falling = False
+            if not below:
+                _player.on_ground = False
+                _player._falling = True
 
 
     def explode_cluster(self, center_player):
