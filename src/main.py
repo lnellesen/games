@@ -5,7 +5,7 @@ import pygame
 import player
 import random
 
-LIST_PLAYER_FILES_RESIZED = [file for file in os.listdir('resized_pictures')]
+LIST_PLAYER_FILES_RESIZED = [file for file in os.listdir('src\\resized_pictures')]
 
 class Game:
     """Class for the game setup."""

@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.player = player
         self._height = size
-        self.image = pygame.image.load(os.path.join('resized_pictures', self.player))
+        self.image = pygame.image.load(os.path.join('src\\resized_pictures', self.player))
         self._surface = game.window
         self.rect = self.image.get_rect(topleft=(x, y))
         self.on_ground = False
