@@ -1,13 +1,13 @@
 """Setup and start of the game."""
 
 import pygame
-import player
+import src.player as player
 import random
-
 
 
 class Game:
     """Class for the game setup."""
+
     WINDOW_WIDTH = 1000
     WINDOW_HEIGHT = 800
     PLATFORM_DELTA = 300
@@ -45,13 +45,16 @@ class Game:
         player.LIST_PLAYER_FILES_RESIZED[1]: 109,
         player.LIST_PLAYER_FILES_RESIZED[0]: 79,
     }
+
     def __init__(self):
         """Initialize the game."""
         pygame.init()
         self.platform_width = Game.WINDOW_WIDTH - Game.PLATFORM_DELTA
         self.platform_x = (Game.WINDOW_WIDTH - self.platform_width) // 2
         self.platform_y = Game.WINDOW_HEIGHT - Game.PLATFORM_HEIGHT
-        self.platform_rect = pygame.Rect(self.platform_x, self.platform_y, self.platform_width, self.PLATFORM_HEIGHT)
+        self.platform_rect = pygame.Rect(
+            self.platform_x, self.platform_y, self.platform_width, self.PLATFORM_HEIGHT
+        )
         self.score = Game.SCORE_BEGIN
         self.font = pygame.font.Font(None, Game.TEXT_SIZE_SCORE)
         self.window = pygame.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
@@ -65,16 +68,14 @@ class Game:
         self.add_new_player()
         # self.run()
 
-    def shall_run(self)-> bool:
+    def shall_run(self) -> bool:
         """Return whether the game should continue running."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._running  = False
+                self._running = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self._running  = False
+                self._running = False
         return self._running
-
-
 
     def run(self):
         """Run the game."""
@@ -98,9 +99,13 @@ class Game:
 
     def add_new_player(self):
         """Add a new random player."""
-        fruit, size = random.choice(list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS:])
-        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruit=fruit)
-        self.players.add(new_player) #Todo: should be a sprites
+        fruit, size = random.choice(
+            list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS :]
+        )
+        new_player = player.Player(
+            self, size=size, x=Game.START_X, y=Game.START_Y, fruit=fruit
+        )
+        self.players.add(new_player)
 
 
 if __name__ == "__main__":

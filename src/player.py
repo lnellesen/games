@@ -5,17 +5,25 @@ import pygame
 import random
 from pathlib import Path
 
-RESIZED_PICTURES_PATH = Path(__file__).parent / 'resized_pictures'
+RESIZED_PICTURES_PATH = Path(__file__).parent / "resized_pictures"
 LIST_PLAYER_FILES_RESIZED = [file for file in sorted(os.listdir(RESIZED_PICTURES_PATH))]
 
 
 class Player(pygame.sprite.Sprite):
     """Class to store and define parameters for each player."""
+
     FALL_VELOCITY = 300
     HORIZONTAL_VELOCITY = 150
     PUSH = 20
-    def __init__(self, game:pygame, size:AnyStr, x:int=500, y:int=32,
-                 fruit:str=random.choice(LIST_PLAYER_FILES_RESIZED)):
+
+    def __init__(
+        self,
+        game: pygame,
+        size: AnyStr,
+        x: int = 500,
+        y: int = 32,
+        fruit: str = random.choice(LIST_PLAYER_FILES_RESIZED),
+    ):
         """
         Initialize the player.
 
@@ -34,7 +42,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x, y))
         self.on_ground = False
         self._falling = False
-
 
     def _stop_falling(self):
         """Settings for a player on the ground or on a different player."""
@@ -74,7 +81,12 @@ class Player(pygame.sprite.Sprite):
 
             # Collision with the ground
             if self.rect.bottom >= self.game.platform_y:
-                if self.game.platform_x <= self.rect.centerx <= (self.game.WINDOW_WIDTH - self.game.platform_width)/2 + self.game.platform_width:
+                if (
+                    self.game.platform_x
+                    <= self.rect.centerx
+                    <= (self.game.WINDOW_WIDTH - self.game.platform_width) / 2
+                    + self.game.platform_width
+                ):
                     self.rect.bottom = self.game.platform_y
                     self._stop_falling()
                 else:
@@ -82,9 +94,7 @@ class Player(pygame.sprite.Sprite):
 
             self.apply_gravity()
 
-
-
-    def handle_collision(self, other:pygame.sprite):
+    def handle_collision(self, other: pygame.sprite):
         """
         Check if a collision results in a merge or not.
         :param other: other player
@@ -100,7 +110,10 @@ class Player(pygame.sprite.Sprite):
 
     def check_chain_merge(self):
         """Check if multiple merges need to happen consecutively."""
-        def touching_or_colliding(sprite: pygame.sprite, group:pygame.sprite)->List[pygame.sprite]:
+
+        def touching_or_colliding(
+            sprite: pygame.sprite, group: pygame.sprite
+        ) -> List[pygame.sprite]:
             """
             Check if the players are touching or colliding.
             param sprite: newest player
@@ -115,11 +128,15 @@ class Player(pygame.sprite.Sprite):
                     continue
                 # check for overlaps and contact
                 if (
-                        sprite.rect.bottom == _other.rect.top or sprite.rect.top == _other.rect.bottom
-                        and sprite.rect.right > _other.rect.left and sprite.rect.left < _other.rect.right
+                    sprite.rect.bottom == _other.rect.top
+                    or sprite.rect.top == _other.rect.bottom
+                    and sprite.rect.right > _other.rect.left
+                    and sprite.rect.left < _other.rect.right
                 ) or (
-                        sprite.rect.right == _other.rect.left or sprite.rect.left == _other.rect.right
-                        and sprite.rect.bottom > _other.rect.top and sprite.rect.top < _other.rect.bottom
+                    sprite.rect.right == _other.rect.left
+                    or sprite.rect.left == _other.rect.right
+                    and sprite.rect.bottom > _other.rect.top
+                    and sprite.rect.top < _other.rect.bottom
                 ):
                     result.append(_other)
             return result
@@ -136,7 +153,6 @@ class Player(pygame.sprite.Sprite):
                         other_players.check_chain_merge()
                 return
 
-
     def apply_gravity(self):
         """Check that no player hangs in the air with no contact to the ground or another player."""
         for _player in self.game.players:
@@ -146,8 +162,10 @@ class Player(pygame.sprite.Sprite):
             if not _player.rect.bottom < self.game.platform_y:
                 continue
             # check if a player is directly below
-            below =[
-                other for other in self.game.players if other is not _player
+            below = [
+                other
+                for other in self.game.players
+                if other is not _player
                 and _player.rect.bottom == other.rect.top
                 and _player.rect.right > other.rect.left
                 and _player.rect.left < other.rect.right
@@ -159,8 +177,7 @@ class Player(pygame.sprite.Sprite):
                 _player.on_ground = False
                 _player._falling = True
 
-
-    def explode_cluster(self, center_player:pygame.sprite):
+    def explode_cluster(self, center_player: pygame.sprite):
         """
         Move players if a new player after a collision needs more space.
 
@@ -189,13 +206,22 @@ class Player(pygame.sprite.Sprite):
                         # horizontal push
                         if dx > 0:
                             # Push right, but only if not too close to right edge after push
-                            if other.rect.right + push <= (self.game.WINDOW_WIDTH - self.game.platform_width)/2 + self.game.platform_width:
+                            if (
+                                other.rect.right + push
+                                <= (self.game.WINDOW_WIDTH - self.game.platform_width)
+                                / 2
+                                + self.game.platform_width
+                            ):
                                 move_x = push
                             else:
                                 other.kill()
                         else:
                             # Push left, but only if not too close to left edge
-                            if other.rect.left - push >= (self.game.WINDOW_WIDTH - self.game.platform_width)/2:
+                            if (
+                                other.rect.left - push
+                                >= (self.game.WINDOW_WIDTH - self.game.platform_width)
+                                / 2
+                            ):
                                 move_x = -push
                             else:
                                 other.kill()
@@ -214,9 +240,7 @@ class Player(pygame.sprite.Sprite):
                     to_check.append(other)
                     visited.add(other)
 
-
-
-    def merge_with(self, other:pygame.sprite):
+    def merge_with(self, other: pygame.sprite):
         """
         Merge two players.
 
@@ -229,9 +253,11 @@ class Player(pygame.sprite.Sprite):
         new_size = self.game.PLAYER_FORMS[new_player]
         # vertical position of new player on top of player below and horizontally centered around other player
         new_x = other.rect.centerx + (self.rect.width - new_size) / 2
-        new_y = other.rect.y + (self.rect.height - new_size) + 2 # trying to slightly lift newly merged player
+        new_y = (
+            other.rect.y + (self.rect.height - new_size) + 2
+        )  # trying to slightly lift newly merged player
 
-        merged = Player(self.game, size=new_size,fruit=new_player, x=new_x, y=new_y)
+        merged = Player(self.game, size=new_size, fruit=new_player, x=new_x, y=new_y)
         level = form_keys.index(self.fruit)
         merged.on_ground = True
         points = level + 1
@@ -254,15 +280,28 @@ class Player(pygame.sprite.Sprite):
             text = font.render("YOU WON!", True, self.game.WHITE)
             self._surface.blit(text, self.game.POSITION_FINISH)
             font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
-            score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
+            score_text = font_score.render(
+                f"Final Score: {self.game.score}", True, self.game.WHITE
+            )
             self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
 
-            button_rect = pygame.Rect((self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2, self.game.POSITION_FINAL_SCORE[1] + 100, self.game.BUTTON_WIDTH, self.game.BUTTON_HEIGHT)
+            button_rect = pygame.Rect(
+                (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2,
+                self.game.POSITION_FINAL_SCORE[1] + 100,
+                self.game.BUTTON_WIDTH,
+                self.game.BUTTON_HEIGHT,
+            )
             pygame.draw.rect(self._surface, self.game.BUTTON_COLOR, button_rect)
             button_font = pygame.font.Font(None, self.game.TEXT_SIZE_SCORE)
             button_text = button_font.render("Replay", True, self.game.WHITE)
-            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (self.game.BUTTON_WIDTH - button_text.get_width()) // 2
-            text_y = self.game.POSITION_FINAL_SCORE[1] + 100 + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (
+                self.game.BUTTON_WIDTH - button_text.get_width()
+            ) // 2
+            text_y = (
+                self.game.POSITION_FINAL_SCORE[1]
+                + 100
+                + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            )
             self._surface.blit(button_text, (text_x, text_y))
             pygame.display.flip()
             # Freeze game, wait for quit or key press
@@ -273,7 +312,10 @@ class Player(pygame.sprite.Sprite):
                         pygame.quit()
                         return
                     if event.type == pygame.KEYDOWN:
-                         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        if (
+                            event.type == pygame.KEYDOWN
+                            and event.key == pygame.K_ESCAPE
+                        ):
                             pygame.quit()
                             return
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -281,11 +323,11 @@ class Player(pygame.sprite.Sprite):
                             waiting = False
 
             from src import main
+
             pygame.quit()
             main.Game().run()
 
-
-    def game_over(self, other:pygame.sprite):
+    def game_over(self, other: pygame.sprite):
         """
         Notify if the max height was reached and the game is lost.
 
@@ -295,22 +337,37 @@ class Player(pygame.sprite.Sprite):
         new_player = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.PLAYER_FORMS[new_player]
         new_y = other.rect.y + (self._height - new_size)
-        if new_y <= self.game.GAME_OVER_HIGHT or other.rect.y <= self.game.GAME_OVER_HIGHT:
+        if (
+            new_y <= self.game.GAME_OVER_HIGHT
+            or other.rect.y <= self.game.GAME_OVER_HIGHT
+        ):
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
             text = font.render("GAME OVER :(", True, self.game.WHITE)
             self._surface.blit(text, self.game.POSITION_FINISH)
             font_score = pygame.font.Font(None, self.game.TEXT_SIZE_FINAL_SCORE)
-            score_text = font_score.render(f"Final Score: {self.game.score}", True, self.game.WHITE)
+            score_text = font_score.render(
+                f"Final Score: {self.game.score}", True, self.game.WHITE
+            )
             self._surface.blit(score_text, self.game.POSITION_FINAL_SCORE)
 
-            button_rect = pygame.Rect((self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2, self.game.POSITION_FINAL_SCORE[1] + 100, self.game.BUTTON_WIDTH, self.game.BUTTON_HEIGHT)
+            button_rect = pygame.Rect(
+                (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2,
+                self.game.POSITION_FINAL_SCORE[1] + 100,
+                self.game.BUTTON_WIDTH,
+                self.game.BUTTON_HEIGHT,
+            )
             pygame.draw.rect(self._surface, self.game.BUTTON_COLOR, button_rect)
             button_font = pygame.font.Font(None, self.game.TEXT_SIZE_SCORE)
             button_text = button_font.render("Replay", True, self.game.WHITE)
-            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (self.game.BUTTON_WIDTH - button_text.get_width()) // 2
-            text_y = self.game.POSITION_FINAL_SCORE[1] + 100 + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            text_x = (self.game.WINDOW_WIDTH - self.game.BUTTON_WIDTH) // 2 + (
+                self.game.BUTTON_WIDTH - button_text.get_width()
+            ) // 2
+            text_y = (
+                self.game.POSITION_FINAL_SCORE[1]
+                + 100
+                + (self.game.BUTTON_HEIGHT - button_text.get_height()) // 2
+            )
             self._surface.blit(button_text, (text_x, text_y))
-
 
             pygame.display.flip()
             # Freeze game, wait for quit or key press
@@ -321,7 +378,10 @@ class Player(pygame.sprite.Sprite):
                         pygame.quit()
                         return
                     if event.type == pygame.KEYDOWN:
-                         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        if (
+                            event.type == pygame.KEYDOWN
+                            and event.key == pygame.K_ESCAPE
+                        ):
                             pygame.quit()
                             return
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -329,5 +389,6 @@ class Player(pygame.sprite.Sprite):
                             waiting = False
 
             from src import main
+
             pygame.quit()
             main.Game().run()
