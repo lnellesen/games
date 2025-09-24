@@ -8,6 +8,7 @@ import random
 LIST_PLAYER_FILES_RESIZED = [file for file in os.listdir('resized_pictures')]
 
 class Game:
+    """Class for the game setup."""
     WINDOW_WIDTH = 1000
     WINDOW_HEIGHT = 800
     PLATFORM_DELTA = 300
@@ -46,9 +47,7 @@ class Game:
         LIST_PLAYER_FILES_RESIZED[0]: 79,
     }
     def __init__(self):
-        """
-        Init of the game class.
-        """
+        """Initialize the game."""
         pygame.init()
         self.platform_width = Game.WINDOW_WIDTH - Game.PLATFORM_DELTA
         self.platform_x = (Game.WINDOW_WIDTH - self.platform_width) // 2
@@ -67,7 +66,7 @@ class Game:
         self.add_new_player()
         # self.run()
 
-    def shall_run(self):
+    def shall_run(self)-> bool:
         """Return whether the game should continue running."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -99,9 +98,9 @@ class Game:
     pygame.quit()
 
     def add_new_player(self):
-        """Add a new player as a fruit."""
+        """Add a new random player."""
         fruit, size = random.choice(list(Game.PLAYER_FORMS.items())[Game.APPEARING_PLAYERS:])
-        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, fruit=fruit)
+        new_player = player.Player(self, size=size,x=Game.START_X, y=Game.START_Y, player=fruit)
         self.players.add(new_player) #Todo: should be a sprites
 
 

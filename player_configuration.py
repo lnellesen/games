@@ -49,8 +49,8 @@ def remodel_player(player: str):
     image = plt.imread(fr"original_pictures\{player}")
     resized_image = resize_player(image)
     image_color = recolor_player(resized_image)
-    plt.imsave(fr"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg", (image_color*255).astype(np.uint8))
-    return
+    plt.imsave(fr"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg",
+               (image_color*255).astype(np.uint8))
 
 if __name__ == "__main__":
     for player in LIST_PLAYER_FILES:
