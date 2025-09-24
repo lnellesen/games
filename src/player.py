@@ -1,9 +1,12 @@
 import os
-from typing import AnyStr, List
+from typing import List
+from typing import Any
 
 import pygame
 import random
 from pathlib import Path
+
+from pygame.sprite import Group
 
 RESIZED_PICTURES_PATH = Path(__file__).parent / "resized_pictures"
 LIST_PLAYER_FILES_RESIZED = [file for file in sorted(os.listdir(RESIZED_PICTURES_PATH))]
@@ -18,8 +21,8 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(
         self,
-        game: pygame,
-        size: AnyStr,
+        game: Any,
+        size: int,
         x: int = 500,
         y: int = 32,
         fruit: str = random.choice(LIST_PLAYER_FILES_RESIZED),
@@ -94,7 +97,7 @@ class Player(pygame.sprite.Sprite):
 
             self.apply_gravity()
 
-    def handle_collision(self, other: pygame.sprite):
+    def handle_collision(self, other: Any):
         """
         Check if a collision results in a merge or not.
         :param other: other player
@@ -111,9 +114,7 @@ class Player(pygame.sprite.Sprite):
     def check_chain_merge(self):
         """Check if multiple merges need to happen consecutively."""
 
-        def touching_or_colliding(
-            sprite: pygame.sprite, group: pygame.sprite
-        ) -> List[pygame.sprite]:
+        def touching_or_colliding(sprite: Any, group: Group) -> List[Any]:
             """
             Check if the players are touching or colliding.
             param sprite: newest player
@@ -177,7 +178,7 @@ class Player(pygame.sprite.Sprite):
                 _player.on_ground = False
                 _player._falling = True
 
-    def explode_cluster(self, center_player: pygame.sprite):
+    def explode_cluster(self, center_player: Any):
         """
         Move players if a new player after a collision needs more space.
 
@@ -240,7 +241,7 @@ class Player(pygame.sprite.Sprite):
                     to_check.append(other)
                     visited.add(other)
 
-    def merge_with(self, other: pygame.sprite):
+    def merge_with(self, other: Any):
         """
         Merge two players.
 
@@ -327,7 +328,7 @@ class Player(pygame.sprite.Sprite):
             pygame.quit()
             main.Game().run()
 
-    def game_over(self, other: pygame.sprite):
+    def game_over(self, other: Any):
         """
         Notify if the max height was reached and the game is lost.
 
@@ -338,8 +339,8 @@ class Player(pygame.sprite.Sprite):
         new_size = self.game.PLAYER_FORMS[new_player]
         new_y = other.rect.y + (self._height - new_size)
         if (
-            new_y <= self.game.GAME_OVER_HIGHT
-            or other.rect.y <= self.game.GAME_OVER_HIGHT
+            new_y <= self.game.GAME_OVER_HEIGHT
+            or other.rect.y <= self.game.GAME_OVER_HEIGHT
         ):
             font = pygame.font.Font(None, self.game.TEXT_SIZE_FINISH)
             text = font.render("GAME OVER :(", True, self.game.WHITE)

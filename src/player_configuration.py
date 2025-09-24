@@ -23,7 +23,7 @@ COLOR_MASK = [0.098, 0.098, 0.098]
 FILENAME_CUTOFF = -5
 
 
-def resize_player(image: np.array) -> np.array:
+def resize_player(image: np.ndarray) -> np.ndarray:
     """
     Resize the fruit player.
     :param image: the image to resize
@@ -32,7 +32,7 @@ def resize_player(image: np.array) -> np.array:
     return resize(image, (image.shape[0] * SCALE_FACTOR, image.shape[1] * SCALE_FACTOR))
 
 
-def recolor_player(image: np.array) -> np.array:
+def recolor_player(image: np.ndarray) -> np.ndarray:
     """
     Recolor the fruit player.
     :param image: the image to recolor
@@ -44,16 +44,16 @@ def recolor_player(image: np.array) -> np.array:
     return image
 
 
-def remodel_player(player: str):
+def remodel_player(_player: str):
     """
     Remodel and save the fruit player.
-    :param player: the file name of the fruit image
+    :param _player: the file name of the fruit image
     """
-    image = plt.imread(rf"original_pictures\{player}")
+    image = plt.imread(rf"original_pictures\{_player}")
     resized_image = resize_player(image)
     image_color = recolor_player(resized_image)
     plt.imsave(
-        rf"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg",
+        rf"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(_player)}{_player[:FILENAME_CUTOFF]}.jpeg",
         (image_color * 255).astype(np.uint8),
     )
 
