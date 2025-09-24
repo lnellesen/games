@@ -4,7 +4,7 @@ from typing import AnyStr, List
 import pygame
 import random
 
-from main import LIST_PLAYER_FILES_RESIZED, Game
+from src.main import LIST_PLAYER_FILES_RESIZED, Game
 
 
 class Player(pygame.sprite.Sprite):
@@ -276,7 +276,7 @@ class Player(pygame.sprite.Sprite):
                         if button_rect.collidepoint(event.pos):
                             waiting = False
 
-            import main
+            from src import main
             pygame.quit()
             main.Game().run()
 
@@ -324,6 +324,6 @@ class Player(pygame.sprite.Sprite):
                         if button_rect.collidepoint(event.pos):
                             waiting = False
 
-            import main
+            from src import main
             pygame.quit()
             main.Game().run()

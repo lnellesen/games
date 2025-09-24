@@ -1,4 +1,4 @@
-"""Player loading and size configurator that are needed before the init of the class PLayer."""
+"""Player loading and size configurator that are needed before the initialisation of the class PLayer."""
 import numpy as np
 from skimage.transform import resize
 from skimage import color

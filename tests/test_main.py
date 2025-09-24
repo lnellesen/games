@@ -1,6 +1,6 @@
 import pygame
 import pytest
-from main import Game
+from src.main import Game
 
 @pytest.fixture
 def game():
