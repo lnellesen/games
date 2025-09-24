@@ -1,4 +1,5 @@
 import os
+from typing import AnyStr, List
 
 import pygame
 import random
@@ -13,7 +14,17 @@ class Player(pygame.sprite.Sprite):
     FALL_VELOCITY = 300
     HORIZONTAL_VELOCITY = 150
     PUSH = 20
-    def __init__(self, game, size, x=500, y=32,  fruit=random.choice(LIST_PLAYER_FILES_RESIZED)):
+    def __init__(self, game:Game, size:AnyStr, x:int=500, y:int=32,
+                 player:str=random.choice(LIST_PLAYER_FILES_RESIZED)):
+        """
+        Initialize the player.
+
+        param game: Game object
+        param size: size of the player
+        param x: x of start position of the player
+        param y: y of start position of the player
+        param player: player
+        """
         super().__init__()
         self.game = game
         self.fruit = fruit
@@ -26,6 +37,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def _stop_falling(self):
+        """Settings for a player on the ground or on a different player."""
         self.on_ground = True
         self._falling = False
 
@@ -72,8 +84,11 @@ class Player(pygame.sprite.Sprite):
 
 
 
-    def handle_collision(self, other):
-        """Check if a collision results in a merge or not."""
+    def handle_collision(self, other:pygame.sprite):
+        """
+        Check if a collision results in a merge or not.
+        :param other: other player
+        """
         form_keys = LIST_PLAYER_FILES_RESIZED
         # form_keys.index(self.fruit) < 9: watermelons are the largest fruit and can not merge
         if self.fruit == other.fruit and form_keys.index(self.fruit) < 9:
@@ -85,8 +100,12 @@ class Player(pygame.sprite.Sprite):
 
     def check_chain_merge(self):
         """Check if multiple merges need to happen consecutively."""
-        def touching_or_colliding(sprite, group):
-            """Check if the players are touching or colliding."""
+        def touching_or_colliding(sprite: pygame.sprite, group:pygame.sprite)->List[pygame.sprite]:
+            """
+            Check if the players are touching or colliding.
+            param sprite: newest player
+            param group: group of other players
+            """
             result = []
             for _other in group:
                 if _other is sprite:
@@ -119,7 +138,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def apply_gravity(self):
-        """Check that no player hangs in the air."""
+        """Check that no player hangs in the air with no contact to the ground or another player."""
         for _player in self.game.players:
             if not _player.on_ground:
                 continue
@@ -141,8 +160,12 @@ class Player(pygame.sprite.Sprite):
                 _player._falling = True
 
 
-    def explode_cluster(self, center_player):
-        """Move players if a new player after a colision needs more space."""
+    def explode_cluster(self, center_player:pygame.sprite):
+        """
+        Move players if a new player after a collision needs more space.
+
+        :param center_player: center player
+        """
         visited = set()
         to_check = [center_player]
         push = Player.PUSH
@@ -193,8 +216,12 @@ class Player(pygame.sprite.Sprite):
 
 
 
-    def merge_with(self, other):
-        """Merge two players."""
+    def merge_with(self, other:pygame.sprite):
+        """
+        Merge two players.
+
+        :param other: other player
+        """
         form_keys = LIST_PLAYER_FILES_RESIZED
         self.kill()
         other.kill()
@@ -253,13 +280,17 @@ class Player(pygame.sprite.Sprite):
                         if button_rect.collidepoint(event.pos):
                             waiting = False
 
-            import main
+            from src import main
             pygame.quit()
             main.Game().run()
 
 
-    def game_over(self, other):
-        """Notify if the max height was reached and the game is lost."""
+    def game_over(self, other:pygame.sprite):
+        """
+        Notify if the max height was reached and the game is lost.
+
+        :param other: other player
+        """
         form_keys = LIST_PLAYER_FILES_RESIZED
         new_player = form_keys[form_keys.index(self.fruit) - 1]
         new_size = self.game.PLAYER_FORMS[new_player]
@@ -297,6 +328,6 @@ class Player(pygame.sprite.Sprite):
                         if button_rect.collidepoint(event.pos):
                             waiting = False
 
-            import main
+            from src import main
             pygame.quit()
             main.Game().run()

@@ -1,4 +1,4 @@
-"""Player loading and size configurator that are needed before the init of the class PLayer."""
+"""Player loading and size configurator that are needed before the initialisation of the class PLayer."""
 import numpy as np
 from skimage.transform import resize
 from skimage import color
@@ -43,14 +43,14 @@ def recolor_player(image:np.array)->np.array:
 
 def remodel_player(player: str):
     """
-    Remodel ans save the fruit player.
+    Remodel and save the fruit player.
     :param player: the file name of the fruit image
     """
     image = plt.imread(fr"original_pictures\{player}")
     resized_image = resize_player(image)
     image_color = recolor_player(resized_image)
-    plt.imsave(fr"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg", (image_color*255).astype(np.uint8))
-    return
+    plt.imsave(fr"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(player)}{player[:FILENAME_CUTOFF]}.jpeg",
+               (image_color*255).astype(np.uint8))
 
 if __name__ == "__main__":
     for player in LIST_PLAYER_FILES:
