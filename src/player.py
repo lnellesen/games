@@ -14,8 +14,8 @@ class Player(pygame.sprite.Sprite):
     FALL_VELOCITY = 300
     HORIZONTAL_VELOCITY = 150
     PUSH = 20
-    def __init__(self, game:Game, size:AnyStr, x:int=500, y:int=32,
-                 player:str=random.choice(LIST_PLAYER_FILES_RESIZED)):
+    def __init__(self, game:pygame, size:AnyStr, x:int=500, y:int=32,
+                 fruit:str=random.choice(LIST_PLAYER_FILES_RESIZED)):
         """
         Initialize the player.
 
