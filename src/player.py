@@ -1,6 +1,7 @@
 """movement of players."""
 
 import os
+import sys
 from typing import List
 from typing import Any
 
@@ -317,13 +318,14 @@ class Player(pygame.sprite.Sprite):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
-                        return
+                        sys.exit()
                     if event.type == pygame.KEYDOWN:
                         if (
                             event.type == pygame.KEYDOWN
                             and event.key == pygame.K_ESCAPE
                         ):
                             pygame.quit()
+                            sys.exit()
                             return
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if button_rect.collidepoint(event.pos):
@@ -383,13 +385,14 @@ class Player(pygame.sprite.Sprite):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
-                        return
+                        sys.exit()
                     if event.type == pygame.KEYDOWN:
                         if (
                             event.type == pygame.KEYDOWN
                             and event.key == pygame.K_ESCAPE
                         ):
                             pygame.quit()
+                            sys.exit()
                             return
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if button_rect.collidepoint(event.pos):
