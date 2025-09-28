@@ -66,7 +66,6 @@ class Game:
         self._running = True
         self.players = pygame.sprite.Group()
         self.add_new_player()
-        # self.run()
 
     def shall_run(self) -> bool:
         """Return whether the game should continue running."""

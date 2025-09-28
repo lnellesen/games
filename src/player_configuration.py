@@ -56,8 +56,3 @@ def remodel_player(_player: str):
         rf"resized_pictures\resized_image_{LIST_PLAYER_FILES.index(_player)}{_player[:FILENAME_CUTOFF]}.jpeg",
         (image_color * 255).astype(np.uint8),
     )
-
-
-if __name__ == "__main__":
-    for player in LIST_PLAYER_FILES:
-        remodel_player(player)

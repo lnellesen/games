@@ -1,3 +1,5 @@
+"""movement of players."""
+
 import os
 from typing import List
 from typing import Any
@@ -94,6 +96,10 @@ class Player(pygame.sprite.Sprite):
                     self._stop_falling()
                 else:
                     self.kill()
+                    form_keys = LIST_PLAYER_FILES_RESIZED
+                    level = form_keys.index(self.fruit)
+                    points = level + 1
+                    self.game.score -= points
 
             self.apply_gravity()
 
@@ -253,7 +259,7 @@ class Player(pygame.sprite.Sprite):
         new_player = form_keys[form_keys.index(self.fruit) + 1]
         new_size = self.game.PLAYER_FORMS[new_player]
         # vertical position of new player on top of player below and horizontally centered around other player
-        new_x = other.rect.centerx + (self.rect.width - new_size) / 2
+        new_x = (other.rect.x + self.rect.x) / 2
         new_y = (
             other.rect.y + (self.rect.height - new_size) + 2
         )  # trying to slightly lift newly merged player
